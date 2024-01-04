@@ -20,7 +20,7 @@ export class AppMenuComponent implements OnInit {
                     { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }
                 ]
             },
-            {
+            /*{
                 label: 'UI Components',
                 items: [
                     { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
@@ -54,12 +54,12 @@ export class AppMenuComponent implements OnInit {
                     { label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', routerLink: ['/utilities/icons'] },
                     { label: 'PrimeFlex', icon: 'pi pi-fw pi-desktop', url: ['https://www.primefaces.org/primeflex/'], target: '_blank' },
                 ]
-            },
+            },*/
             {
-                label: 'Pages',
+                label: 'Reserva',
                 icon: 'pi pi-fw pi-briefcase',
                 items: [
-                    {
+                    /*{
                         label: 'Landing',
                         icon: 'pi pi-fw pi-globe',
                         routerLink: ['/landing']
@@ -99,7 +99,7 @@ export class AppMenuComponent implements OnInit {
                         label: 'Not Found',
                         icon: 'pi pi-fw pi-exclamation-circle',
                         routerLink: ['/notfound']
-                    },
+                    },*/
                     {
                         label: 'Empty',
                         icon: 'pi pi-fw pi-circle-off',
@@ -107,7 +107,7 @@ export class AppMenuComponent implements OnInit {
                     },
                 ]
             },
-            {
+            /*{
                 label: 'Hierarchy',
                 items: [
                     {
@@ -159,7 +159,7 @@ export class AppMenuComponent implements OnInit {
                         label: 'View Source', icon: 'pi pi-fw pi-search', url: ['https://github.com/primefaces/sakai-ng'], target: '_blank'
                     }
                 ]
-            }
+            }*/
         ];
     }
 }
