@@ -107,6 +107,16 @@ export class AppMenuComponent implements OnInit {
                     },
                 ]
             },
+            {
+                label: 'Administrador',
+                items: [
+                    {
+                        label: 'Salas',
+                        icon: 'pi pi-fw pi-bookmark',
+                        routerLink: ['/pages/admin-salas']
+                    },
+                ]
+            },
             /*{
                 label: 'Hierarchy',
                 items: [
