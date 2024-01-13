@@ -13,22 +13,32 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
 import { SliderModule } from 'primeng/slider';
 import { RatingModule } from 'primeng/rating';
+import { FileUploadModule } from 'primeng/fileupload';
+import { FormsModule } from '@angular/forms';
+import { ToolbarModule } from 'primeng/toolbar';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
     imports: [
         CommonModule,
-        AdminSalasRoutingModule,
         TableModule,
+        FileUploadModule,
+        FormsModule,
         ButtonModule,
-        InputTextModule,
-        ToggleButtonModule,
         RippleModule,
-        MultiSelectModule,
-        DropdownModule,
-        ProgressBarModule,
         ToastModule,
-        SliderModule,
-        RatingModule
+        ToolbarModule,
+        RatingModule,
+        InputTextModule,
+        InputTextareaModule,
+        DropdownModule,
+        RadioButtonModule,
+        InputNumberModule,
+        DialogModule,
+        AdminSalasRoutingModule
     ],
     declarations: [AdminSalasComponent]
 })

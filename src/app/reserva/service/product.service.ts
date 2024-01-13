@@ -1,11 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Product } from '../api/product';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class ProductService {
 
+    private urlApi = 'https://backend-reserva-node.azurewebsites.net/products';
+
     constructor(private http: HttpClient) { }
+
+    public getProductsApiJs(): Observable<any>{
+        return this.http.get<any>(this.urlApi);
+    }
 
     getProductsSmall() {
         return this.http.get<any>('assets/reserva/data/products-small.json')
