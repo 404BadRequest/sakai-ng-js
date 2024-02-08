@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { EmptyDemoComponent } from './emptydemo.component';
+import { NewResevaComponent } from './newreserva.component';
 
 @NgModule({
     imports: [RouterModule.forChild([
-        { path: '', component: EmptyDemoComponent }
+        { path: '', component: NewResevaComponent }
     ])],
     exports: [RouterModule]
 })
-export class EmptyDemoRoutingModule { }
+export class NewResevaRoutingModule { }

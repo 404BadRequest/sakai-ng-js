@@ -101,9 +101,9 @@ export class AppMenuComponent implements OnInit {
                         routerLink: ['/notfound']
                     },*/
                     {
-                        label: 'Empty',
-                        icon: 'pi pi-fw pi-circle-off',
-                        routerLink: ['/pages/empty']
+                        label: 'Nueva reserva',
+                        icon: 'pi pi-fw pi-pencil',
+                        routerLink: ['/pages/new-reserva']
                     },
                 ]
             },
