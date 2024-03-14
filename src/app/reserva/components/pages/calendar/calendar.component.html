@@ -1,1 +1,24 @@
-<p>calendar works!</p>
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h4>Calendario</h4>
+                <full-calendar
+                    [options]="calendarOptions"
+                    [events]="calendarEvents"
+                ></full-calendar>
+        </div>
+    </div>
+    <p-dialog [(visible)]="infoUserDialog" header="Detalle de la reserva" [modal]="true" [style]="{width:'450px'}">
+        <div class="p-grid p-dir-col">
+            <div class="p-col">
+              <b>Título:</b> {{ eventDetails?.title }}
+            </div>
+            <div class="p-col">
+              <b>Hora de inicio:</b> {{ eventDetails?.start }}
+            </div>
+            <div class="p-col">
+              <b>Hora de fin:</b> {{ eventDetails?.end }}
+            </div>
+          </div>
+    </p-dialog>
+</div>

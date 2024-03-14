@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
         { path: 'admin-salas', loadChildren: () => import('./admin-salas/admin-salas.module').then(m => m.AdminSalasModule) },
         { path: 'admin-usuarios', loadChildren: () => import('./admin-usuarios/admin-usuarios.module').then(m => m.AdminUsuariosModule) },
         { path: 'new-reserva', loadChildren: () => import('./new-reserva/new-reserva.module').then(m => m.NewResevaModule) },
+        { path: 'calendar', loadChildren: () => import('./calendar/calendar.module').then(m => m.CalendarModule) },
         { path: '**', redirectTo: '/notfound' }
     ])],
     exports: [RouterModule]
