@@ -1,0 +1,160 @@
+<div class="grid">
+    <div class="col-12">
+      <div class="card">
+        <h4>Nueva reserva</h4>
+        <p-toast></p-toast>
+        <p-steps [model]="items" [activeIndex]="activeIndex" class="custom-steps"></p-steps>
+  
+        <div *ngIf="items[0]['active']">
+            <p-card header="Información de la reserva">
+                <ng-template pTemplate="content">
+                    <div class="col-12 md:col-12">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bars"></i></span>
+                            <input type="text" pInputText required placeholder="Nombre de la reserva" [(ngModel)]="nombreReserva">         
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-12">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"><i class="pi pi-id-card"></i></span>
+                            <input type="text" pInputText placeholder="N° de personas" [(ngModel)]="numeroPersonas" soloNumeros>         
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-12">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bars"></i></span>
+                            <textarea [rows]="5" [cols]="30" pInputTextarea [autoResize]="true" placeholder="Comentarios" [(ngModel)]="comentarios"></textarea>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <div class="grid grid-nogutter justify-content-end">
+                        <p-button label="Siguiente" (onClick)="nextStep()" icon="pi pi-angle-right" iconPos="right"></p-button>
+                    </div>
+                </ng-template>
+            </p-card>
+        </div>
+  
+        <div *ngIf="items[1]['active']">
+            <p-card header="Insumos / Dependencia">
+                <ng-template pTemplate="content">
+                    <div class="col-12 md:col-12">
+                        <div class="field">
+                            <label for="name"><span class="p-inputgroup-addon"><i class="pi pi-bars"></i></span></label>
+                            <p-multiSelect [options]="dropdownItemsInsumos" [(ngModel)]="selectedItems" optionLabel="name" (onChange)="saveInsumosSelection($event.value)" placeholder="Seleccione insumos" style="width: 200px;"></p-multiSelect>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-12">
+                        <div class="field">
+                            <label for="name"><span class="p-inputgroup-addon"><i class="pi pi-bars"></i>&nbsp;Dependencias</span></label>
+                            <p-listbox [options]="dropdownItemsDependencias" [(ngModel)]="selectedItemsDependencias"  optionLabel="name" (onChange)="saveDependenciasSelection($event.value)" [filter]="true" [placeholder]="'Seleccione dependencia'">
+                            </p-listbox>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <div class="grid grid-nogutter justify-content-between">
+                        <p-button label="Volver" (onClick)="previousStep()" icon="pi pi-angle-left"></p-button>
+                        <p-button label="Siguiente" (onClick)="nextStep()" icon="pi pi-angle-right" iconPos="right"></p-button>
+                    </div>
+                </ng-template>
+            </p-card>
+        </div>
+  
+        <div *ngIf="items[2]['active']">
+            <p-card header="Horario">
+                <ng-template pTemplate="content">
+                    <div class="col-12 md:col-12">
+                        <p-calendar [(ngModel)]="dateCalendar" [minDate]="minDate" [inline]="true" [showWeek]="true" (onSelect)="showSelectedDate($event)"></p-calendar>
+                    </div>
+                    <div class="col-12 md:col-12" *ngIf="selectedDate">
+                        <p>Fecha seleccionada: {{ selectedDate | date: 'dd-MM-yyyy' }}</p>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <div class="grid grid-nogutter justify-content-between">
+                        <p-button label="Volver" (onClick)="previousStep()" icon="pi pi-angle-left"></p-button>
+                        <p-button label="Siguiente" (onClick)="nextStep()" icon="pi pi-angle-right" iconPos="right"></p-button>
+                    </div>
+                </ng-template>
+            </p-card>
+        </div>
+  
+        <div *ngIf="items[3]['active']">
+            <p-card header="Confirmación">
+                <ng-template pTemplate="content">
+                <div class="card py-8 px-6 md:px-8 overflow-auto">
+                    <div class="flex flex-column align-items-start md:flex-row md:align-items-center md:justify-content-between border-bottom-1 surface-border pb-5 min-w-max">
+                        <div class="flex flex-column">
+                            <img src="../../../../../assets/layout/images/logo-dark.svg" style="width: 70px; height: 70px;" />
+                            <div class="my-3 text-4xl font-bold text-700">
+                                NUEVA RESERVA
+                            </div>
+                        </div>
+                        <div class="flex flex-column mt-5 md:mt-0">
+                            <div class="text-2xl font-semibold text-left md:text-right mb-3">DETALLE</div>
+                            <div class="flex flex-column">
+                                <div class="flex justify-content-between align-items-center mb-2">
+                                    <span class="font-semibold mr-6">FECHA</span>
+                                    <span>30/08/2019</span>
+                                </div>
+                                <div class="flex justify-content-between align-items-center">
+                                    <span class="font-semibold mr-6">USUARIO</span>
+                                    <span>JULIO SOTO SÁNCHEZ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <p-fieldset legend="Información de la reserva" [toggleable]="true">
+                        <div class="col-12 md:col-12">
+                            <div class="p-inputgroup">
+                                <label for="class">Nombre de la reserva: <b>{{nombreReserva}}</b></label>       
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-12">
+                            <div class="p-inputgroup">
+                                <label for="class">Número de personas: <b>{{numeroPersonas}}</b></label>       
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-12">
+                            <div class="p-inputgroup">
+                                <label for="class">Motivo de la reserva: <b>{{motivoReserva}}</b></label>       
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-12">
+                            <div class="p-inputgroup">
+                                <label for="class">Comentarios de la reserva: <b>{{comentarios}}</b></label>       
+                            </div>
+                        </div>
+                    </p-fieldset>
+                    <br />
+                    <p-fieldset legend="Insumos / dependencia" [toggleable]="true">
+                        <div class="col-12 md:col-12">
+                            <div class="p-inputgroup">
+                                <label for="Nombre de la reserva">asdasd</label>       
+                            </div>
+                        </div>
+                    </p-fieldset>
+                    <br />
+                    <p-fieldset legend="Horario" [toggleable]="true">
+                        <div class="col-12 md:col-12">
+                            <div class="p-inputgroup">
+                                <label for="Nombre de la reserva">asdasd</label>       
+                            </div>
+                        </div>
+                    </p-fieldset>
+                </div>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <div class="grid grid-nogutter justify-content-between">
+                        <p-button label="Volver" (onClick)="previousStep()" icon="pi pi-angle-left"></p-button>
+                        <p-button label="Finalizar" (onClick)="nextStep()" icon="pi pi-angle-right" iconPos="right" styleClass="p-button-success"></p-button>
+                    </div>
+                </ng-template>
+            </p-card>
+        </div>
+      </div>
+    </div>
+  </div>
+  

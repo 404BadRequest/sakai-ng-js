@@ -13,6 +13,8 @@ import { NodeService } from './reserva/service/node.service';
 import { PhotoService } from './reserva/service/photo.service';
 import { UserService } from './reserva/service/user.service';
 import { RolService } from './reserva/service/rol.service';
+import { ParametroDetalleService } from './reserva/service/parametroDetalle.service';
+import { DependenciaService } from './reserva/service/dependencia.service';
 
 @NgModule({
     declarations: [
@@ -25,7 +27,7 @@ import { RolService } from './reserva/service/rol.service';
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         CountryService, CustomerService, EventService, IconService, NodeService,
-        PhotoService, ProductService, UserService, RolService
+        PhotoService, ProductService, UserService, RolService, ParametroDetalleService, DependenciaService
     ],
     bootstrap: [AppComponent]
 })
