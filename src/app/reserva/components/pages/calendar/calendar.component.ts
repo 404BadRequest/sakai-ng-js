@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid'
 import esLocale from '@fullcalendar/core/locales/es-Us'
+import listPlugin from '@fullcalendar/list'
 
 @Component({
   templateUrl: './calendar.component.html',
@@ -13,7 +14,7 @@ export class CalendarComponent {
   infoUserDialog = false;
   
   calendarOptions = {
-    plugins: [dayGridPlugin, timeGridPlugin],
+    plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
     initialView: 'dayGridMonth', // Vista inicial del calendario (mes)
     locale: esLocale,
     selectable: true, // Permite seleccionar rangos de tiempo
@@ -27,19 +28,23 @@ export class CalendarComponent {
       timeGridWeek: { // Vista de semana
         type: 'timeGridWeek',
         buttonText: 'Semana'
+      },
+      listWeek: { // Vista de lista por semana
+        type: 'listWeek',
+        buttonText: 'Lista (Semana)'
       }
     },
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek'
+      right: 'dayGridMonth,timeGridWeek,listWeek'
     },
   };
 
   calendarEvents = [ // Define los eventos del calendario
     { title: 'Reserva laboratorio de computación', date: '2024-03-13T10:00:00', end: '2024-03-13T11:00:00' },
     { title: 'Reserva laboratorio de computación', date: '2024-03-13T15:00:00', end: '2024-03-13T17:00:00' },
-    { title: 'Reserva sala 202', date: '2024-03-11T14:30:00' }
+    { title: 'Reserva sala 202', date: '2024-03-11T14:30:00', end: '2024-03-11T17:00:00' }
   ];
 
   handleDateSelect(selectInfo: any) {
