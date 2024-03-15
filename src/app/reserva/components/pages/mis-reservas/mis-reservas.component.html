@@ -1,1 +1,29 @@
-<p>mis-reservas works!</p>
+<div class="grid">
+    <div class="col-12">
+      <div class="card">
+        <h4>Mis reservas</h4>
+        <p-table [value]="products" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="code">Código <p-sortIcon field="code"></p-sortIcon></th>
+                    <th pSortableColumn="name">Nombre reserva <p-sortIcon field="name"></p-sortIcon></th>
+                    <th pSortableColumn="date">Fecha reserva <p-sortIcon field="price"></p-sortIcon></th>
+                    <th pSortableColumn="user">Usuario asignado <p-sortIcon field="price"></p-sortIcon></th>
+                    <th>View</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product>
+                <tr>
+                    <td style="width: 35%; min-width: 7rem;">{{product.code}}</td>
+                    <td style="width: 35%; min-width: 7rem;">{{product.name}}</td>
+                    <td style="width: 35%; min-width: 8rem;">{{product.date }}</td>
+                    <td style="width: 35%; min-width: 8rem;">{{product.user }}</td>
+                    <td style="width: 15%;">
+                        <button pButton pRipple type="button" icon="pi pi-search" class="p-button p-component p-button-text p-button-icon-only"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+      </div>
+    </div>
+</div>
