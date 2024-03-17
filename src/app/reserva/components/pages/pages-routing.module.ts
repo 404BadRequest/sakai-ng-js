@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
         { path: 'new-reserva', loadChildren: () => import('./new-reserva/new-reserva.module').then(m => m.NewResevaModule) },
         { path: 'calendar', loadChildren: () => import('./calendar/calendar.module').then(m => m.CalendarModule) },
         { path: 'mis-reservas', loadChildren: () => import('./mis-reservas/mis-reservas.module').then(m => m.MisReservasModule) },
+        { path: 'mis-aprobaciones', loadChildren: () => import('./mis-aprobaciones/mis-aprobaciones.module').then(m => m.MisAprobacionesModule) },
         { path: '**', redirectTo: '/notfound' }
     ])],
     exports: [RouterModule]

@@ -111,6 +111,11 @@ export class AppMenuComponent implements OnInit {
                         routerLink: ['/pages/mis-reservas']
                     },
                     {
+                        label: 'Mis aprobaciones',
+                        icon: 'pi pi-fw pi-pencil',
+                        routerLink: ['/pages/mis-aprobaciones']
+                    },
+                    {
                         label: 'Calendario',
                         icon: 'pi pi-fw pi-calendar',
                         routerLink: ['/pages/calendar']

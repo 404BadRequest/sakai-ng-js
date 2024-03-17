@@ -17,6 +17,7 @@ export class CalendarComponent {
     plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
     initialView: 'dayGridMonth', // Vista inicial del calendario (mes)
     locale: esLocale,
+    firstDay: 1,
     selectable: true, // Permite seleccionar rangos de tiempo
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
