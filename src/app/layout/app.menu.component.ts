@@ -102,17 +102,17 @@ export class AppMenuComponent implements OnInit {
                     },*/
                     {
                         label: 'Nueva reserva',
-                        icon: 'pi pi-fw pi-pencil',
+                        icon: 'pi pi-fw pi-plus',
                         routerLink: ['/pages/new-reserva']
                     },
                     {
                         label: 'Mis reservas',
-                        icon: 'pi pi-fw pi-pencil',
+                        icon: 'pi pi-fw pi-folder-open',
                         routerLink: ['/pages/mis-reservas']
                     },
                     {
                         label: 'Mis aprobaciones',
-                        icon: 'pi pi-fw pi-pencil',
+                        icon: 'pi pi-fw pi-check-square',
                         routerLink: ['/pages/mis-aprobaciones']
                     },
                     {
