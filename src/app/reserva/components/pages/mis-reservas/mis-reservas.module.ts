@@ -26,9 +26,6 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { CalendarModule } from 'primeng/calendar';
 import { ListboxModule } from 'primeng/listbox';
 
-//directives
-import { SoloNumerosDirective } from 'src/app/reserva/directive/solo-numeros.directive';
-
 @NgModule({
     imports: [
         CommonModule,
@@ -57,6 +54,6 @@ import { SoloNumerosDirective } from 'src/app/reserva/directive/solo-numeros.dir
         CalendarModule,
         ListboxModule
     ],
-    declarations: [MisReservasComponent, SoloNumerosDirective]
+    declarations: [MisReservasComponent]
 })
 export class MisReservasModule { }

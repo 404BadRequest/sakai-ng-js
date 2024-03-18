@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MisAprobacionesRoutingModule } from './mis-aprobaciones.routing.module';
-import { MisAprobacionesComponent } from './mis-aprobaciones.component';
+import { DetailReservaRoutingModule } from './detail-reserva.routing.module';
+import { DetailReservaComponent } from './detail-reserva.component';
 import { CardModule } from 'primeng/card';
 import { PanelModule } from 'primeng/panel';
 import { StepsModule } from 'primeng/steps';
@@ -29,7 +29,7 @@ import { ListboxModule } from 'primeng/listbox';
 @NgModule({
     imports: [
         CommonModule,
-        MisAprobacionesRoutingModule,
+        DetailReservaRoutingModule,
         CardModule,
         PanelModule,
         StepsModule,
@@ -54,6 +54,6 @@ import { ListboxModule } from 'primeng/listbox';
         CalendarModule,
         ListboxModule
     ],
-    declarations: [MisAprobacionesComponent]
+    declarations: [DetailReservaComponent]
 })
-export class MisAprobacionesModule { }
+export class DetailReservaModule { }
