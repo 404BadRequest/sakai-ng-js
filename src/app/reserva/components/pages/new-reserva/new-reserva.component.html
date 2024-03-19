@@ -41,7 +41,7 @@
                     <div class="col-12 md:col-12">
                         <div class="field">
                             <label for="name"><span class="p-inputgroup-addon"><i class="pi pi-bars"></i></span></label>
-                            <p-multiSelect [options]="dropdownItemsInsumos" [(ngModel)]="selectedItems" optionLabel="name" (onChange)="saveInsumosSelection($event.value)" placeholder="Seleccione insumos" style="width: 200px;"></p-multiSelect>
+                            <p-multiSelect [options]="dropdownItemsInsumos" [(ngModel)]="selectedItems" optionLabel="name" (onChange)="saveInsumosSelection($event.value)" placeholder="Seleccione insumos"></p-multiSelect>
                         </div>
                     </div>
                     <div class="col-12 md:col-12">
@@ -64,11 +64,32 @@
         <div *ngIf="items[2]['active']">
             <p-card header="Horario">
                 <ng-template pTemplate="content">
-                    <div class="col-12 md:col-12">
-                        <p-calendar [(ngModel)]="dateCalendar" [minDate]="minDate" [inline]="true" [showWeek]="true" (onSelect)="showSelectedDate($event)"></p-calendar>
-                    </div>
-                    <div class="col-12 md:col-12" *ngIf="selectedDate">
-                        <p>Fecha seleccionada: {{ selectedDate | date: 'dd-MM-yyyy' }}</p>
+                    <div class="col-12">
+                        <div class="card">
+                            <h5>Divider</h5>
+                            <div class="grid">
+                                <div class="col-5 flex align-items-center justify-content-center">
+                                    <p-calendar [(ngModel)]="dateCalendar" [minDate]="minDate" [inline]="true" [showWeek]="true" (onSelect)="showSelectedDate($event)"></p-calendar>
+                                </div>
+                                <div class="col-2">
+                                    <p-divider layout="vertical">
+                                    </p-divider>
+                                </div>
+                                <div class="col-5 align-items-center justify-content-center">
+                                    <p>Fecha seleccionada: <b>{{ selectedDate | date: 'dd-MM-yyyy' }}</b></p>
+                                    <p-table [value]="gruposDeHoras" [paginator]="false" [rows]="10" [columns]="cols">
+                                        <ng-template pTemplate="body" let-grupoDeHoras>
+                                            <tr>
+                                                <td *ngFor="let hora of grupoDeHoras">
+                                                    {{ hora.hora }}:00
+                                                    <button pButton type="button" icon="pi pi-check" class="small-button" [ngClass]="{'p-button-success': hora.seleccionado}" (click)="toggleHoraSeleccionada(hora)"></button>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </ng-template>
                 <ng-template pTemplate="footer">
@@ -119,11 +140,6 @@
                         </div>
                         <div class="col-12 md:col-12">
                             <div class="p-inputgroup">
-                                <label for="class">Motivo de la reserva: <b>{{motivoReserva}}</b></label>       
-                            </div>
-                        </div>
-                        <div class="col-12 md:col-12">
-                            <div class="p-inputgroup">
                                 <label for="class">Comentarios de la reserva: <b>{{comentarios}}</b></label>       
                             </div>
                         </div>
@@ -132,7 +148,15 @@
                     <p-fieldset legend="Insumos / dependencia" [toggleable]="true">
                         <div class="col-12 md:col-12">
                             <div class="p-inputgroup">
-                                <label for="Nombre de la reserva">asdasd</label>       
+                                <label for="class">Insumos:</label>       
+                                <ul>
+                                    <li *ngFor="let selectedItem of selectedItems">{{ selectedItem.name }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-12">
+                            <div class="p-inputgroup">
+                                <label for="class">Dependencia: <b>{{selectedItemsDependencias.name}}</b></label>       
                             </div>
                         </div>
                     </p-fieldset>
@@ -140,9 +164,18 @@
                     <p-fieldset legend="Horario" [toggleable]="true">
                         <div class="col-12 md:col-12">
                             <div class="p-inputgroup">
-                                <label for="Nombre de la reserva">asdasd</label>       
+                                <label for="Nombre de la reserva"><p>Fecha solicitud: {{ selectedDate | date: 'dd-MM-yyyy' }}</p></label>       
                             </div>
                         </div>
+                        <div class="col-12 md:col-12">
+                            <div class="p-inputgroup">
+                                <p>Horas seleccionadas:</p>
+                                    <ul>
+                                        <li *ngFor="let hora of horasSeleccionadas">{{ hora.hora }}:00 hrs.</li>
+                                    </ul>
+                            </div>
+                        </div>
+                        
                     </p-fieldset>
                 </div>
                 </ng-template>

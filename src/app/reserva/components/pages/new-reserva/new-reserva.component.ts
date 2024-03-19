@@ -4,11 +4,22 @@ import { DependenciaService } from 'src/app/reserva/service/dependencia.service'
 import { ParametroDetalleService } from 'src/app/reserva/service/parametroDetalle.service';
 import { SelectedDataService } from 'src/app/reserva/service/selected-data.service';
 
+interface Hora {
+  hora: number;
+  seleccionado: boolean;
+}
+
 @Component({
   templateUrl: './new-reserva.component.html',
   providers: [MessageService]
 })
 export class NewResevaComponent implements OnInit { 
+
+  horasDelDia: Hora[] = [];
+  gruposDeHoras: any[] = [];
+  horasSeleccionadas: Hora[] = [];
+
+  cols: any[];
   items: MenuItem[];
   texto: string;
   activeIndex: number = 0;
@@ -44,6 +55,26 @@ export class NewResevaComponent implements OnInit {
     this.getDependencias();
     this.dropdownItemsInsumos = this.selectedDataService.getSelectedData();
     this.minDate = new Date();
+
+    this.cols = [
+      { field: 'hora', header: 'Hora' },
+      { field: 'seleccionado', header: 'Seleccionar' }
+    ];
+
+    // Crear una lista de horas del día
+    for (let i = 0; i < 24; i++) {
+      this.horasDelDia.push({ hora: i, seleccionado: false });
+    }
+    this.gruposDeHoras = this.chunkArray(this.horasDelDia, 3);
+
+  }
+
+  chunkArray(array: any[], size: number): any[] {
+    const result = [];
+    for (let i = 0; i < array.length; i += size) {
+        result.push(array.slice(i, i + size));
+    }
+    return result;
   }
   getParametrosDetalleInsumos(): void {
     this.parametroDetalle.getParametroDetalleByIdParametro(this.parametroInsumo)
@@ -91,6 +122,11 @@ export class NewResevaComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Por favor complete todos los campos para continuar', life: 3000 });
         return; // Detener el proceso de pasar al siguiente paso
       }
+    }else if(this.items[this.activeIndex]['label'] === 'Horario'){
+      if(!this.selectedDate || this.horasSeleccionadas.length === 0){
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Por favor complete todos los campos para continuar', life: 3000 });
+        return; // Detener el proceso de pasar al siguiente paso
+      }
     }
     const currentIndex = this.items.findIndex(item => item['active']);
     if (currentIndex < this.items.length - 1) {
@@ -112,5 +148,14 @@ export class NewResevaComponent implements OnInit {
 
   showSelectedDate(event: any) {
     this.selectedDate = event;
+  }
+
+  toggleHoraSeleccionada(hora: Hora) {
+    hora.seleccionado = !hora.seleccionado;
+    if (hora.seleccionado) {
+        this.horasSeleccionadas.push(hora);
+    } else {
+        this.horasSeleccionadas = this.horasSeleccionadas.filter(item => item !== hora);
+    }
   }
 }

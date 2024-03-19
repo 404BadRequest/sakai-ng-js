@@ -12,3 +12,6 @@ $gutter: 1rem; //for primeflex grid system
 @import "assets/reserva/styles/flags/flags.css";
 @import "assets/reserva/styles/badges.scss";
 @import "assets/reserva/styles/code.scss";
+
+/*Layout*/
+@import "../src/app/reserva/components/pages/new-reserva/new-reserva.component.scss";

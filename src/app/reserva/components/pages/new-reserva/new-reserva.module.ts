@@ -25,6 +25,9 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { CalendarModule } from 'primeng/calendar';
 import { ListboxModule } from 'primeng/listbox';
+import { DividerModule } from 'primeng/divider';
+import { SplitterModule } from 'primeng/splitter';
+import { CheckboxModule } from 'primeng/checkbox';
 
 //directives
 import { SoloNumerosDirective } from 'src/app/reserva/directive/solo-numeros.directive';
@@ -55,7 +58,10 @@ import { SoloNumerosDirective } from 'src/app/reserva/directive/solo-numeros.dir
         FieldsetModule,
         MultiSelectModule,
         CalendarModule,
-        ListboxModule
+        ListboxModule,
+        DividerModule,
+        SplitterModule,
+        CheckboxModule
     ],
     declarations: [NewResevaComponent, SoloNumerosDirective]
 })
