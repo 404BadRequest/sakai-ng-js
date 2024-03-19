@@ -30,15 +30,15 @@ export class CalendarComponent {
         type: 'timeGridWeek',
         buttonText: 'Semana'
       },
-      listWeek: { // Vista de lista por semana
-        type: 'listWeek',
-        buttonText: 'Lista (Semana)'
+      listMonth: { // Vista de lista por mes
+        type: 'listMonth',
+        buttonText: 'Lista (Mes)'
       }
     },
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,listWeek'
+      right: 'dayGridMonth,timeGridWeek,listMonth'
     },
   };
 

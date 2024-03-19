@@ -26,6 +26,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { CalendarModule } from 'primeng/calendar';
 import { ListboxModule } from 'primeng/listbox';
 
+
 @NgModule({
     imports: [
         CommonModule,
@@ -52,7 +53,8 @@ import { ListboxModule } from 'primeng/listbox';
         FieldsetModule,
         MultiSelectModule,
         CalendarModule,
-        ListboxModule
+        ListboxModule,
+        
     ],
     declarations: [DetailReservaComponent]
 })
