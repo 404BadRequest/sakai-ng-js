@@ -80,7 +80,7 @@
                                         <ng-template pTemplate="body" let-grupoDeHoras>
                                             <tr>
                                                 <td *ngFor="let hora of grupoDeHoras">
-                                                    {{ hora.hora }}:00
+                                                    {{ hora.hora.toString().padStart(2, '0') }}:{{ hora.minuto.toString().padStart(2, '0') }}
                                                     <button pButton type="button" icon="pi pi-check" class="small-button" [ngClass]="{'p-button-success': hora.seleccionado}" (click)="toggleHoraSeleccionada(hora)"></button>
                                                 </td>
                                             </tr>
@@ -170,7 +170,7 @@
                             <div class="p-inputgroup">
                                 <p>Horas seleccionadas:</p>
                                     <ul>
-                                        <li *ngFor="let hora of horasSeleccionadas">{{ hora.hora }}:00 hrs.</li>
+                                        <li *ngFor="let hora of horasSeleccionadas">{{ hora.hora.toString().padStart(2, '0') }}:{{ hora.minuto.toString().padStart(2, '0') }} hrs.</li>
                                     </ul>
                             </div>
                         </div>

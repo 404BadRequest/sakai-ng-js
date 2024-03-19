@@ -10,6 +10,7 @@ registerLocaleData(localeEs, 'es');
 
 interface Hora {
   hora: number;
+  minuto: number; // Agregamos la propiedad minuto
   seleccionado: boolean;
 }
 
@@ -65,10 +66,17 @@ export class NewResevaComponent implements OnInit {
       { field: 'seleccionado', header: 'Seleccionar' }
     ];
 
-    // Crear una lista de horas del día
-    for (let i = 0; i < 24; i++) {
-      this.horasDelDia.push({ hora: i, seleccionado: false });
+    // Inicializar la lista de horas del día
+    for (let i = 7; i < 24; i++) { // Comenzar desde las 7:30 am
+      this.horasDelDia.push({ hora: i, minuto: 30, seleccionado: false });
+      if (i < 23) {
+          this.horasDelDia.push({ hora: i + 1, minuto: 0, seleccionado: false });
+      }
     }
+    // Agregar la última hora (12:00 am)
+    this.horasDelDia.push({ hora: 0, minuto: 0, seleccionado: false });
+
+    // Agrupar las horas en conjuntos de 3 para la presentación en la interfaz de usuario
     this.gruposDeHoras = this.chunkArray(this.horasDelDia, 3);
 
   }
