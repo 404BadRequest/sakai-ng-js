@@ -60,6 +60,7 @@
                 </ng-template>
             </p-card>
         </div>
+  
         <div *ngIf="items[2]['active']">
             <p-card header="Horario">
                 <ng-template pTemplate="content">
@@ -67,7 +68,7 @@
                         <div class="card">
                             <div class="grid">
                                 <div class="col-5 flex align-items-center justify-content-center">
-                                    <p-calendar [(ngModel)]="dateCalendar" [minDate]="minDate" [inline]="true" [showWeek]="true" (onSelect)="showSelectedDate($event)" locale="es"></p-calendar>
+                                    <p-calendar [(ngModel)]="dateCalendar" [minDate]="minDate" [inline]="true" [showWeek]="true" (onSelect)="showSelectedDate($event)"></p-calendar>
                                 </div>
                                 <div class="col-2">
                                     <p-divider layout="vertical">
@@ -148,7 +149,7 @@
                             <div class="p-inputgroup">
                                 <label for="class">Insumos:</label>       
                                 <ul>
-                                    <li *ngFor="let selectedItem of selectedItems">{{ selectedItem.name }}</li>
+                                    <li *ngFor="let selectedItem of selectedItems"><b>{{ selectedItem.name }}</b></li>
                                 </ul>
                             </div>
                         </div>
@@ -162,14 +163,14 @@
                     <p-fieldset legend="Horario" [toggleable]="true">
                         <div class="col-12 md:col-12">
                             <div class="p-inputgroup">
-                                <label for="Nombre de la reserva"><p>Fecha solicitud: {{ selectedDate | date: 'dd-MM-yyyy' }}</p></label>       
+                                <label for="Nombre de la reserva"><p>Fecha solicitud: <b>{{ selectedDate | date: 'dd-MM-yyyy' }}</b></p></label>
                             </div>
                         </div>
                         <div class="col-12 md:col-12">
                             <div class="p-inputgroup">
                                 <p>Horas seleccionadas:</p>
                                     <ul>
-                                        <li *ngFor="let hora of horasSeleccionadas">{{ hora.hora.toString().padStart(2, '0') }}:{{ hora.minuto.toString().padStart(2, '0') }} hrs.</li>
+                                        <li *ngFor="let hora of horasSeleccionadas"><b>{{ hora.hora.toString().padStart(2, '0') }}:{{ hora.minuto.toString().padStart(2, '0') }} hrs.</b></li>
                                     </ul>
                             </div>
                         </div>

@@ -12,7 +12,7 @@ interface Hora {
 
 @Component({
   templateUrl: './new-reserva.component.html',
-  providers: [{ provide: LOCALE_ID, useValue: 'es' }, MessageService]
+  providers: [MessageService]
 })
 export class NewResevaComponent implements OnInit { 
 
