@@ -3,10 +3,6 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { DependenciaService } from 'src/app/reserva/service/dependencia.service';
 import { ParametroDetalleService } from 'src/app/reserva/service/parametroDetalle.service';
 import { SelectedDataService } from 'src/app/reserva/service/selected-data.service';
-import { registerLocaleData } from '@angular/common';
-import localeEs from '@angular/common/locales/es';
-
-registerLocaleData(localeEs, 'es');
 
 interface Hora {
   hora: number;

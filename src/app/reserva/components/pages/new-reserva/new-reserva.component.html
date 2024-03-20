@@ -60,7 +60,6 @@
                 </ng-template>
             </p-card>
         </div>
-  
         <div *ngIf="items[2]['active']">
             <p-card header="Horario">
                 <ng-template pTemplate="content">
@@ -68,7 +67,7 @@
                         <div class="card">
                             <div class="grid">
                                 <div class="col-5 flex align-items-center justify-content-center">
-                                    <p-calendar [(ngModel)]="dateCalendar" [minDate]="minDate" [inline]="true" [showWeek]="true" (onSelect)="showSelectedDate($event)"></p-calendar>
+                                    <p-calendar [(ngModel)]="dateCalendar" [minDate]="minDate" [inline]="true" [showWeek]="true" (onSelect)="showSelectedDate($event)" locale="es"></p-calendar>
                                 </div>
                                 <div class="col-2">
                                     <p-divider layout="vertical">
