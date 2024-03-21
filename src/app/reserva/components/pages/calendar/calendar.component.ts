@@ -43,9 +43,9 @@ export class CalendarComponent {
   };
 
   calendarEvents = [ // Define los eventos del calendario
-    { title: 'Reserva laboratorio de computación', date: '2024-03-13T10:00:00', end: '2024-03-13T11:00:00' },
-    { title: 'Reserva laboratorio de computación', date: '2024-03-13T15:00:00', end: '2024-03-13T17:00:00' },
-    { title: 'Reserva sala 202', date: '2024-03-11T14:30:00', end: '2024-03-11T17:00:00' }
+    { title: 'Reserva laboratorio de computación', date: '2024-03-20T10:00:00', end: '2024-03-20T11:00:00' },
+    { title: 'Reserva laboratorio de computación', date: '2024-03-20T15:00:00', end: '2024-03-20T17:00:00' },
+    { title: 'Reserva sala 202', date: '2024-03-19T14:30:00', end: '2024-03-19T17:00:00' }
   ];
 
   handleDateSelect(selectInfo: any) {
