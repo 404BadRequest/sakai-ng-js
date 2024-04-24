@@ -106,12 +106,12 @@ export class AppMenuComponent implements OnInit {
                         routerLink: ['/pages/new-reserva']
                     },
                     {
-                        label: 'Mis reservas',
+                        label: 'Mis solicitudes',
                         icon: 'pi pi-fw pi-folder-open',
                         routerLink: ['/pages/mis-reservas']
                     },
                     {
-                        label: 'Mis aprobaciones',
+                        label: 'Mis reservas',
                         icon: 'pi pi-fw pi-check-square',
                         routerLink: ['/pages/mis-aprobaciones']
                     },

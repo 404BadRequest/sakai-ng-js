@@ -1,6 +1,7 @@
 import { Component, LOCALE_ID, OnInit } from '@angular/core';
 import { MenuItem, MessageService } from 'primeng/api';
 import { DependenciaService } from 'src/app/reserva/service/dependencia.service';
+import { InsumosService } from 'src/app/reserva/service/insumos.service';
 import { ParametroDetalleService } from 'src/app/reserva/service/parametroDetalle.service';
 import { SelectedDataService } from 'src/app/reserva/service/selected-data.service';
 
@@ -39,6 +40,7 @@ export class NewResevaComponent implements OnInit {
 
   constructor(
     private parametroDetalle: ParametroDetalleService,
+    private insumos: InsumosService,
     private selectedDataService: SelectedDataService,
     private messageService: MessageService,
     private dependencia: DependenciaService
@@ -85,10 +87,10 @@ export class NewResevaComponent implements OnInit {
     return result;
   }
   getParametrosDetalleInsumos(): void {
-    this.parametroDetalle.getParametroDetalleByIdParametro(this.parametroInsumo)
+    this.insumos.getInsumosApiJs()
       .subscribe(data => {
         // Actualiza this.dropdownItemsRols con los roles obtenidos
-        this.dropdownItemsInsumos = data.map(parametro => ({ name: parametro.Nombre, code: parametro.Id }));
+        this.dropdownItemsInsumos = data.map(insumo => ({ name: insumo.Nombre, code: insumo.Id }));
       }, error => {
         console.error('Error en la solicitud de parametrosDetalle:', error);
     });
