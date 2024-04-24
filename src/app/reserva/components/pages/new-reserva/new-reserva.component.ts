@@ -7,7 +7,7 @@ import { SelectedDataService } from 'src/app/reserva/service/selected-data.servi
 
 interface Hora {
   hora: number;
-  minuto: number; // Agregamos la propiedad minuto
+  minuto: number;
   seleccionado: boolean;
 }
 
@@ -45,6 +45,7 @@ export class NewResevaComponent implements OnInit {
     private messageService: MessageService,
     private dependencia: DependenciaService
   ) { }
+
   ngOnInit() {
 
     this.items = [
@@ -54,7 +55,7 @@ export class NewResevaComponent implements OnInit {
       { label: 'Confirmación', command: () => this.activateStep(3) }
     ];
 
-    this.getParametrosDetalleInsumos();
+    this.getInsumos();
     this.getDependencias();
     this.dropdownItemsInsumos = this.selectedDataService.getSelectedData();
     this.minDate = new Date();
@@ -86,13 +87,15 @@ export class NewResevaComponent implements OnInit {
     }
     return result;
   }
-  getParametrosDetalleInsumos(): void {
+
+
+  getInsumos(): void {
     this.insumos.getInsumosApiJs()
       .subscribe(data => {
         // Actualiza this.dropdownItemsRols con los roles obtenidos
         this.dropdownItemsInsumos = data.map(insumo => ({ name: insumo.Nombre, code: insumo.Id }));
       }, error => {
-        console.error('Error en la solicitud de parametrosDetalle:', error);
+        console.error('Error en la solicitud de insumos:', error);
     });
   }
 
@@ -167,5 +170,9 @@ export class NewResevaComponent implements OnInit {
     } else {
         this.horasSeleccionadas = this.horasSeleccionadas.filter(item => item !== hora);
     }
+  }
+
+  save(){
+    
   }
 }
