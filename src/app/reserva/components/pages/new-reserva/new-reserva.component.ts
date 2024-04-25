@@ -1,8 +1,10 @@
 import { Component, LOCALE_ID, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { DependenciaService } from 'src/app/reserva/service/dependencia.service';
 import { InsumosService } from 'src/app/reserva/service/insumos.service';
 import { ParametroDetalleService } from 'src/app/reserva/service/parametroDetalle.service';
+import { ReservaService } from 'src/app/reserva/service/reserva.service';
 import { SelectedDataService } from 'src/app/reserva/service/selected-data.service';
 
 interface Hora {
@@ -37,13 +39,18 @@ export class NewResevaComponent implements OnInit {
   selectedDate: Date;
   dateCalendar: Date;
   minDate: Date;
+  mostrarContenido: boolean = true;
+  guardandoReserva: boolean = false;
 
   constructor(
     private parametroDetalle: ParametroDetalleService,
     private insumos: InsumosService,
     private selectedDataService: SelectedDataService,
     private messageService: MessageService,
-    private dependencia: DependenciaService
+    private dependencia: DependenciaService,
+    private reservaService : ReservaService,
+    private router: Router,
+    private reservaInsumoService: InsumosService
   ) { }
 
   ngOnInit() {
@@ -172,7 +179,54 @@ export class NewResevaComponent implements OnInit {
     }
   }
 
-  save(){
-    
+  saveReserva() {
+    this.mostrarContenido = false; // Oculta el contenido de la página
+    this.guardandoReserva = true; // Muestra la barra de carga
+    // Recolecta los datos de la reserva desde las variables del componente
+    const datosReserva = {
+      NombreReserva: this.nombreReserva,
+      NPersonas: this.numeroPersonas,
+      Comentario: this.comentarios,
+      UserId: 13,
+      DependenciaId: this.selectedItemsDependencias,
+      Insumos: this.selectedItems,
+      FechaReserva: this.selectedDate
+    };
+    // Envía los datos de la reserva al servidor
+    this.reservaService.createNewReserva(datosReserva).subscribe(
+      (reserva: any) => {
+        //console.log('Reserva guardada con éxito:', reserva);
+        const reservaId = reserva.id; // Obtén el ID de la reserva creada
+        // Crea un array de objetos para guardar los insumos asociados a la reserva
+        const reservaInsumos = this.selectedItems.map(insumo => {
+          return {
+            ReservaId: reservaId[""],
+            InsumoId: insumo.code
+          };
+        });
+        //console.log(reservaInsumos);
+        // Guarda los insumos asociados a la reserva en la tabla Reserva_Has_Insumos
+        this.reservaInsumoService.createNewReservaInsumos(reservaInsumos).subscribe(
+          () => {
+            //console.log('Insumos asociados a la reserva guardados con éxito');
+            this.guardandoReserva = false; // Oculta la barra de carga después de guardar
+            this.mostrarContenido = true; // Muestra el contenido de la página nuevamente
+          },
+          error => {
+            //console.error('Error al guardar los insumos asociados a la reserva:', error);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un error al momento de procesar los insumos. Contactese con el administrador.', life: 3000 });
+          }
+        );
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        });
+      },
+      error => {
+        //console.error('Error al guardar la reserva:', error);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un error al momento de procesar la reserva. Contactese con el administrador.', life: 3000 });
+        this.guardandoReserva = false; // Asegúrate de ocultar la barra de carga en caso de error
+        this.mostrarContenido = true; // Muestra el contenido de la página nuevamente
+      }
+    );
   }
 }

@@ -29,4 +29,8 @@ export class InsumosService {
         const url = `${this.urlApi}/insumos/count`;
         return this.http.get<any>(url);
     }
+    createNewReservaInsumos(reservaInsumos: any): Observable<any>{
+        const url = `${this.urlApi}/insumos/reservaInsumos`;
+        return this.http.post<any>(url, reservaInsumos);
+    }
 }
