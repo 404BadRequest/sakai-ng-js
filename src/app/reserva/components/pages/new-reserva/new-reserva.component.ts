@@ -5,6 +5,7 @@ import { DependenciaService } from 'src/app/reserva/service/dependencia.service'
 import { InsumosService } from 'src/app/reserva/service/insumos.service';
 import { ParametroDetalleService } from 'src/app/reserva/service/parametroDetalle.service';
 import { ReservaService } from 'src/app/reserva/service/reserva.service';
+import { ReservaHorariosService } from 'src/app/reserva/service/reservaHorarios.service';
 import { SelectedDataService } from 'src/app/reserva/service/selected-data.service';
 
 interface Hora {
@@ -50,7 +51,8 @@ export class NewResevaComponent implements OnInit {
     private dependencia: DependenciaService,
     private reservaService : ReservaService,
     private router: Router,
-    private reservaInsumoService: InsumosService
+    private reservaInsumoService: InsumosService,
+    private reservaHorariosService: ReservaHorariosService
   ) { }
 
   ngOnInit() {
@@ -204,7 +206,16 @@ export class NewResevaComponent implements OnInit {
             InsumoId: insumo.code
           };
         });
-        //console.log(reservaInsumos);
+
+        const reservaHorarios = this.horasSeleccionadas.map(horario => {
+          return {
+            ReservaId: reservaId[""],
+            HoraSeleccionada: horario.hora.toString().padStart(2, '0')+":"+horario.minuto.toString().padStart(2, '0'),
+            MinutoSeleccionado: horario.minuto.toString().padStart(2, '0'),
+            FechaReserva: this.selectedDate
+          }
+        })
+        console.log(reservaHorarios);
         // Guarda los insumos asociados a la reserva en la tabla Reserva_Has_Insumos
         this.reservaInsumoService.createNewReservaInsumos(reservaInsumos).subscribe(
           () => {
@@ -215,6 +226,15 @@ export class NewResevaComponent implements OnInit {
           error => {
             //console.error('Error al guardar los insumos asociados a la reserva:', error);
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un error al momento de procesar los insumos. Contactese con el administrador.', life: 3000 });
+          }
+        );
+        this.reservaHorariosService.createNewReservaHorarios(reservaHorarios).subscribe(
+          () => {
+            this.guardandoReserva = false; // Oculta la barra de carga después de guardar
+            this.mostrarContenido = true; // Muestra el contenido de la página nuevamente
+          },
+          error => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un error al momento de procesar los horarios. Contactese con el administrador.', life: 3000 });
           }
         );
         setTimeout(() => {
