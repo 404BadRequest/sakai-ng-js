@@ -1,6 +1,7 @@
 import { Component, LOCALE_ID, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
+import { HorariosService } from 'src/app/reserva/service/Horarios.service';
 import { DependenciaService } from 'src/app/reserva/service/dependencia.service';
 import { InsumosService } from 'src/app/reserva/service/insumos.service';
 import { ParametroDetalleService } from 'src/app/reserva/service/parametroDetalle.service';
@@ -11,6 +12,13 @@ import { SelectedDataService } from 'src/app/reserva/service/selected-data.servi
 interface Hora {
   hora: number;
   minuto: number;
+  seleccionado: boolean;
+}
+
+interface Horario {
+  Id: number;
+  TipoHorarioId: number;
+  Horario: string;
   seleccionado: boolean;
 }
 
@@ -42,6 +50,7 @@ export class NewResevaComponent implements OnInit {
   minDate: Date;
   mostrarContenido: boolean = true;
   guardandoReserva: boolean = false;
+  horariosContinuos: any[] = [];
 
   constructor(
     private parametroDetalle: ParametroDetalleService,
@@ -52,7 +61,8 @@ export class NewResevaComponent implements OnInit {
     private reservaService : ReservaService,
     private router: Router,
     private reservaInsumoService: InsumosService,
-    private reservaHorariosService: ReservaHorariosService
+    private reservaHorariosService: ReservaHorariosService,
+    private horariosService: HorariosService
   ) { }
 
   ngOnInit() {
@@ -63,7 +73,7 @@ export class NewResevaComponent implements OnInit {
       { label: 'Horario', command: () => this.activateStep(2) },
       { label: 'Confirmación', command: () => this.activateStep(3) }
     ];
-
+    this.getHorariosContinuo();
     this.getInsumos();
     this.getDependencias();
     this.dropdownItemsInsumos = this.selectedDataService.getSelectedData();
@@ -74,30 +84,29 @@ export class NewResevaComponent implements OnInit {
       { field: 'seleccionado', header: 'Seleccionar' }
     ];
 
-    // Inicializar la lista de horas del día
-    for (let i = 7; i < 24; i++) { // Comenzar desde las 7:30 am
-      this.horasDelDia.push({ hora: i, minuto: 30, seleccionado: false });
-      if (i < 23) {
-          this.horasDelDia.push({ hora: i + 1, minuto: 0, seleccionado: false });
+  }
+  getHorariosContinuo(){
+    this.horariosService.getHorariosContinuo().subscribe(
+      (horarios: any[]) => {
+        // Si los horarios se obtienen correctamente, los asignamos y luego los agrupamos
+        this.horasDelDia = horarios;
+        this.gruposDeHoras = this.chunkArray(this.horasDelDia, 3);
+        console.log('Horarios obtenidos:', this.gruposDeHoras);
+      },
+      error => {
+        console.error('Error al obtener los horarios:', error);
       }
-    }
-    // Agregar la última hora (12:00 am)
-    this.horasDelDia.push({ hora: 0, minuto: 0, seleccionado: false });
-
-    // Agrupar las horas en conjuntos de 3 para la presentación en la interfaz de usuario
-    this.gruposDeHoras = this.chunkArray(this.horasDelDia, 3);
-
+    );
   }
 
-  chunkArray(array: any[], size: number): any[] {
-    const result = [];
+  chunkArray(array: any[], size: number) {
+    // Lógica para dividir el array en sub-arrays de tamaño especificado
+    const chunkedArray = [];
     for (let i = 0; i < array.length; i += size) {
-        result.push(array.slice(i, i + size));
+      chunkedArray.push(array.slice(i, i + size));
     }
-    return result;
+    return chunkedArray;
   }
-
-
   getInsumos(): void {
     this.insumos.getInsumosApiJs()
       .subscribe(data => {
@@ -215,7 +224,7 @@ export class NewResevaComponent implements OnInit {
             FechaReserva: this.selectedDate
           }
         })
-        console.log(reservaHorarios);
+        //console.log(reservaHorarios);
         // Guarda los insumos asociados a la reserva en la tabla Reserva_Has_Insumos
         this.reservaInsumoService.createNewReservaInsumos(reservaInsumos).subscribe(
           () => {
