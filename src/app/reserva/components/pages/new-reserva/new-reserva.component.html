@@ -81,7 +81,8 @@
                                             <tr>
                                                 <td *ngFor="let hora of grupoDeHoras">
                                                     {{ hora.Horario.toString()}}
-                                                    <button pButton type="button" icon="pi pi-check" class="small-button" [ngClass]="{'p-button-success': hora.seleccionado}" (click)="toggleHoraSeleccionada(hora)"></button>
+                                                    <!--<button pButton type="button" icon="pi pi-check" class="small-button" [ngClass]="{'p-button-success': hora.seleccionado}" (click)="toggleHoraSeleccionada(hora)"></button>-->
+                                                    <button pButton type="button" [icon]="horaOcupada.includes(hora.Horario) ? 'pi pi-times' : 'pi pi-check'" class="small-button" [ngClass]="{'p-button-success': hora.seleccionado, 'p-button-danger': !hora.seleccionado}" (click)="toggleHoraSeleccionada(hora)"></button>
                                                 </td>
                                             </tr>
                                         </ng-template>

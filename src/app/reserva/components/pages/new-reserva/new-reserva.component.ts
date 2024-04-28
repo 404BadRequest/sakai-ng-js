@@ -1,4 +1,4 @@
-import { Component, LOCALE_ID, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, LOCALE_ID, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { HorariosService } from 'src/app/reserva/service/Horarios.service';
@@ -20,6 +20,7 @@ interface Horario {
   TipoHorarioId: number;
   Horario: string;
   seleccionado: boolean;
+  FechaReserva: string;
 }
 
 @Component({
@@ -28,9 +29,9 @@ interface Horario {
 })
 export class NewResevaComponent implements OnInit { 
 
-  horasDelDia: Hora[] = [];
+  horasDelDia: Horario[] = [];
   gruposDeHoras: any[] = []; 
-  horasSeleccionadas: Hora[] = [];
+  horasSeleccionadas: Horario[] = [];
 
   cols: any[];
   items: MenuItem[];
@@ -51,6 +52,8 @@ export class NewResevaComponent implements OnInit {
   mostrarContenido: boolean = true;
   guardandoReserva: boolean = false;
   horariosContinuos: any[] = [];
+  horariosUtilizados: any[] = [];
+  horaOcupada: string[] = [];
 
   constructor(
     private parametroDetalle: ParametroDetalleService,
@@ -62,7 +65,8 @@ export class NewResevaComponent implements OnInit {
     private router: Router,
     private reservaInsumoService: InsumosService,
     private reservaHorariosService: ReservaHorariosService,
-    private horariosService: HorariosService
+    private horariosService: HorariosService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -74,10 +78,16 @@ export class NewResevaComponent implements OnInit {
       { label: 'Confirmación', command: () => this.activateStep(3) }
     ];
     this.getHorariosContinuo();
+    this.getHorariosSeleccionados();
     this.getInsumos();
     this.getDependencias();
     this.dropdownItemsInsumos = this.selectedDataService.getSelectedData();
-    this.minDate = new Date();
+    
+    // Obtener la fecha actual
+    const fechaActual = new Date();
+    // Agregar un día a la fecha actual
+    fechaActual.setDate(fechaActual.getDate() + 1);
+    this.minDate = fechaActual;
 
     this.cols = [
       { field: 'hora', header: 'Hora' },
@@ -91,10 +101,21 @@ export class NewResevaComponent implements OnInit {
         // Si los horarios se obtienen correctamente, los asignamos y luego los agrupamos
         this.horasDelDia = horarios;
         this.gruposDeHoras = this.chunkArray(this.horasDelDia, 3);
-        console.log('Horarios obtenidos:', this.gruposDeHoras);
+        //console.log('Horarios obtenidos:', this.gruposDeHoras);
       },
       error => {
         console.error('Error al obtener los horarios:', error);
+      }
+    );
+  }
+
+  getHorariosSeleccionados(){
+    this.horariosService.getHorariosUtilizados().subscribe(
+      (horariosUtilizados: any[]) => {
+        this.horariosUtilizados = horariosUtilizados;
+      },
+      error => {
+        console.error('Error al obtener los horarios utilizados:', error);
       }
     );
   }
@@ -178,10 +199,74 @@ export class NewResevaComponent implements OnInit {
   }
 
   showSelectedDate(event: any) {
+    const horariosUtilizados = this.horariosUtilizados;
+    const fechaSeleccionada = new Date(event); // Convertir a objeto Date si no lo es
+    fechaSeleccionada.setHours(fechaSeleccionada.getHours() - 2);
+    const fechaFormateada = this.formatDate(fechaSeleccionada); // Formatear la fecha
+    //console.log('Fecha seleccionada:', fechaFormateada);
+
+    //Verificamos que la fecha seleccionada posea reservas ya ingresadas.
+    const elementosEncontrados = horariosUtilizados.filter(elemento => {
+      const fechaElemento = new Date(elemento.FechaReserva); // Convertir la fecha del elemento a objeto Date
+      fechaElemento.setUTCHours(0, 0, 0, 0); // Establecer la hora a medianoche en UTC
+      const fechaElementoFormateada = this.formatDate(fechaElemento); // Formatear la fecha del elemento
+      return fechaElementoFormateada === fechaFormateada;
+    });
+    
+    //Obtenemos el codigo de la dependencia para buscar si tiene reservas en horarios utilizados
+    const dependencias = this.selectedItemsDependencias;
+    let codeDependencia: number;
+    for (const key in dependencias) {
+      if (Object.prototype.hasOwnProperty.call(dependencias, key)) {
+        if(key == 'code'){
+          codeDependencia = dependencias[key];
+        }
+      }
+    }
+    //Si existen elementos encontrados para la fecha seleccionada seguimos adelante
+    if (elementosEncontrados.length > 0) {
+      const dependeciasEncontradas = elementosEncontrados.filter(elemento => {
+        return elemento.DependenciaId === codeDependencia;
+      });
+      //Validamos que se hayan encontrado dependencias para la fecha seleccionada
+      console.log("dependencias: ",dependeciasEncontradas);
+      if (dependeciasEncontradas.length > 0) {
+        dependeciasEncontradas.forEach(dependencia => {
+          //TODO: Se debe realziar un arreglo que contenga, id, tipoHorarioId, Horario para poder agregar a la función toggleHoraSeleccionada
+          const horaReservadas = dependeciasEncontradas.map(horaEncontrada => {
+            return {
+              Hora: horaEncontrada.Horario,
+              InsumoId: horaEncontrada.code
+            };
+          });
+          //this.toggleHoraSeleccionada(horaReservadas);
+            // Aquí puedes acceder a las horas ocupadas de cada dependencia
+            const horaOcupada = dependencia.HoraSeleccionada;
+            // Itera sobre las horas ocupadas y actualiza la propiedad 'seleccionado' de las horas correspondientes en gruposDeHoras
+            console.log('horas seleeccionadas: ',dependeciasEncontradas);
+            console.log('horas seleeccionadas: ',this.horasSeleccionadas);
+            console.log('hora ocupada', horaOcupada.toString());
+            console.log('grupo de horas, ', this.gruposDeHoras);
+        });
+    }else{
+        console.log('No se encontraron dependencias');
+      }
+    } else {
+        console.log('No se encontraron objetos con la fecha buscada.');
+    }
+    
     this.selectedDate = event;
   }
 
-  toggleHoraSeleccionada(hora: Hora) {
+  formatDate(date: Date): string {
+    const year = date.getUTCFullYear();
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const day = date.getUTCDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  toggleHoraSeleccionada(hora: Horario) {
+    console.log("horas", hora);
     hora.seleccionado = !hora.seleccionado;
     if (hora.seleccionado) {
         this.horasSeleccionadas.push(hora);
@@ -215,16 +300,14 @@ export class NewResevaComponent implements OnInit {
             InsumoId: insumo.code
           };
         });
-
+        console.log(this.horasSeleccionadas);
         const reservaHorarios = this.horasSeleccionadas.map(horario => {
           return {
             ReservaId: reservaId[""],
-            HoraSeleccionada: horario.hora.toString().padStart(2, '0')+":"+horario.minuto.toString().padStart(2, '0'),
-            MinutoSeleccionado: horario.minuto.toString().padStart(2, '0'),
-            FechaReserva: this.selectedDate
+            HoraSeleccionada: horario.Horario,
+            FechaReserva: this.selectedDate.toString()
           }
         })
-        //console.log(reservaHorarios);
         // Guarda los insumos asociados a la reserva en la tabla Reserva_Has_Insumos
         this.reservaInsumoService.createNewReservaInsumos(reservaInsumos).subscribe(
           () => {
