@@ -54,6 +54,13 @@ export class NewResevaComponent implements OnInit {
   horariosContinuos: any[] = [];
   horariosUtilizados: any[] = [];
   horaOcupada: string[] = [];
+  // Propiedad para almacenar las horas encontradas con la selección forzada
+  horasEncontradasToggle: Horario[] = [];
+
+  // Getter para calcular grupoDeHoras basado en horasEncontradasToggle
+  get grupoDeHoras(): Horario[] {
+    return this.horasEncontradasToggle;
+  }
 
   constructor(
     private parametroDetalle: ParametroDetalleService,
@@ -66,7 +73,7 @@ export class NewResevaComponent implements OnInit {
     private reservaInsumoService: InsumosService,
     private reservaHorariosService: ReservaHorariosService,
     private horariosService: HorariosService,
-    private cdr: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -229,24 +236,44 @@ export class NewResevaComponent implements OnInit {
         return elemento.DependenciaId === codeDependencia;
       });
       //Validamos que se hayan encontrado dependencias para la fecha seleccionada
-      console.log("dependencias: ",dependeciasEncontradas);
+      // Supongamos que quieres agregar la propiedad 'seleccionado: true' al objeto con Id: 1
+      const idModificar = 4;
+      //TODO: Se debe implementar para las horas seleccionadas para la dependencia.
+      this.gruposDeHoras = this.gruposDeHoras.map(grupo => {
+        //console.log('id a buscar: ',grupo[0].Id);
+        if (grupo[0].Id === idModificar) {
+            return [{ ...grupo[0], seleccionado: true }, ...grupo.slice(1)];
+        } else {
+            return grupo;
+        }
+      });
+      //console.log(this.gruposDeHoras);
       if (dependeciasEncontradas.length > 0) {
         dependeciasEncontradas.forEach(dependencia => {
-          //TODO: Se debe realziar un arreglo que contenga, id, tipoHorarioId, Horario para poder agregar a la función toggleHoraSeleccionada
-          const horaReservadas = dependeciasEncontradas.map(horaEncontrada => {
-            return {
-              Hora: horaEncontrada.Horario,
-              InsumoId: horaEncontrada.code
-            };
+          const horaOcupada = dependencia.HoraSeleccionada;
+          const horasEncontradas = this.horasDelDia.filter(elemento => {
+            //console.log('comparación: ', elemento.Horario, " = ", horaOcupada.toString());
+            if(elemento.Horario == horaOcupada.toString())
+              {
+                this.horasEncontradasToggle.push(
+                  {
+                    Id: elemento.Id, 
+                    TipoHorarioId: elemento.TipoHorarioId,
+                    Horario: elemento.Horario,
+                    seleccionado: true,
+                    FechaReserva: fechaFormateada
+                  }
+                )
+                //console.log('horas toggle: ', this.horasEncontradasToggle);
+            }
+            return elemento.Horario === horaOcupada.toString();
           });
-          //this.toggleHoraSeleccionada(horaReservadas);
-            // Aquí puedes acceder a las horas ocupadas de cada dependencia
-            const horaOcupada = dependencia.HoraSeleccionada;
-            // Itera sobre las horas ocupadas y actualiza la propiedad 'seleccionado' de las horas correspondientes en gruposDeHoras
-            console.log('horas seleeccionadas: ',dependeciasEncontradas);
-            console.log('horas seleeccionadas: ',this.horasSeleccionadas);
-            console.log('hora ocupada', horaOcupada.toString());
-            console.log('grupo de horas, ', this.gruposDeHoras);
+          //console.log('horas toggle: ', horasEncontradas);
+          this.horasEncontradasToggle.forEach(horario => {
+            this.toggleHoraSeleccionada(horario);
+            //console.log(horario)
+          });
+          this.cdRef.detectChanges();
         });
     }else{
         console.log('No se encontraron dependencias');
@@ -266,13 +293,19 @@ export class NewResevaComponent implements OnInit {
   }
 
   toggleHoraSeleccionada(hora: Horario) {
-    console.log("horas", hora);
     hora.seleccionado = !hora.seleccionado;
     if (hora.seleccionado) {
         this.horasSeleccionadas.push(hora);
     } else {
         this.horasSeleccionadas = this.horasSeleccionadas.filter(item => item !== hora);
     }
+  }
+  // Método para forzar la selección de horas encontradas
+  forzarSeleccionHoras() {
+    this.horasEncontradasToggle.forEach(horario => {
+      this.toggleHoraSeleccionada(horario);
+    });
+    this.cdRef.detectChanges(); // Detecta cambios en la vista después de forzar la selección
   }
 
   saveReserva() {
