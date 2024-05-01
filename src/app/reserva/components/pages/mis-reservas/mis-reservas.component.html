@@ -2,22 +2,33 @@
     <div class="col-12">
       <div class="card">
         <h4>Mis solicitudes</h4>
-        <p-table [value]="products" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+        <p-table #dt [value]="reservasByUser" [columns]="cols" responsiveLayout="scroll" [rows]="5" [globalFilterFields]="['Id', 'NombreReserva', 'FechaReserva', 'NombreDependencia','Nombres']" [paginator]="true" [rowsPerPageOptions]="[5,10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords} registros" selectionMode="multiple" [rowHover]="true" dataKey="Id">
+            <ng-template pTemplate="caption">
+                <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                    <h5 class="m-0">Reservas realizadas por mí</h5>
+                    <span class="block mt-2 md:mt-0 p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..."  class="w-full sm:w-auto"/>
+                    </span>
+                </div>
+            </ng-template>
             <ng-template pTemplate="header">
                 <tr>
-                    <th pSortableColumn="code">Código <p-sortIcon field="code"></p-sortIcon></th>
-                    <th pSortableColumn="name">Nombre reserva <p-sortIcon field="name"></p-sortIcon></th>
-                    <th pSortableColumn="date">Fecha reserva <p-sortIcon field="date"></p-sortIcon></th>
-                    <th pSortableColumn="user">Usuario asignado <p-sortIcon field="user"></p-sortIcon></th>
+                    <th pSortableColumn="Id">Id reserva <p-sortIcon field="Id"></p-sortIcon></th>
+                    <th pSortableColumn="NombreReserva">Nombre reserva <p-sortIcon field="NombreReserva"></p-sortIcon></th>
+                    <th pSortableColumn="FechaReserva">Fecha reserva <p-sortIcon field="FechaReserva"></p-sortIcon></th>
+                    <th pSortableColumn="NombreDependencia">Dependencia <p-sortIcon field="NombreDependencia"></p-sortIcon></th>
+                    <th pSortableColumn="Nombres">Usuario asignado <p-sortIcon field="Nombres"></p-sortIcon></th>
                     <th>Detalle</th>
                 </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-product>
+            <ng-template pTemplate="body" let-reserva>
                 <tr>
-                    <td style="width: 35%; min-width: 7rem;">{{product.code}}</td>
-                    <td style="width: 35%; min-width: 7rem;">{{product.name}}</td>
-                    <td style="width: 35%; min-width: 8rem;">{{product.date }}</td>
-                    <td style="width: 35%; min-width: 8rem;">{{product.user }}</td>
+                    <td style="width: 15%; min-width: 7rem;">{{reserva.Id}}</td>
+                    <td style="width: 45%; min-width: 7rem;">{{reserva.NombreReserva}}</td>
+                    <td style="width: 35%; min-width: 8rem;">{{reserva.FechaReserva | date: 'dd-MM-yyyy' }}</td>
+                    <td style="width: 35%; min-width: 8rem;">{{reserva.NombreDependencia }}</td>
+                    <td style="width: 35%; min-width: 8rem;">{{reserva.Nombres }}</td>
                     <td style="width: 15%;">
                         <button pButton pRipple type="button" icon="pi pi-search" class="p-button p-component p-button-text p-button-icon-only" [routerLink]="['/pages/detail-reserva']"></button>
                     </td>

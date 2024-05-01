@@ -23,4 +23,9 @@ export class ReservaService {
         const url = `${this.urlApi}/reservas/${Id}`;
         return this.http.get<any>(url);
     }
+
+    getReservaByUserId(UserId: string): Observable<any>{
+        const url = `${this.urlApi}/reservas/userId/${UserId}`;
+        return this.http.get<any>(url);
+    }
 }
