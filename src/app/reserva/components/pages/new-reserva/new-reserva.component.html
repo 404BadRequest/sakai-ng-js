@@ -76,6 +76,7 @@
                                 </div>
                                 <div class="col-5 align-items-center justify-content-center">
                                     <p>Fecha seleccionada: <b>{{ selectedDate | date: 'dd-MM-yyyy' }}</b></p>
+                                    <p>Dependencia seleccionada: <b>{{ selectedItemsDependencias.name }}</b></p>
                                     <p-table [value]="gruposDeHoras" [paginator]="false" [rows]="10" [columns]="cols">
                                         <ng-template pTemplate="body" let-grupoDeHoras>
                                             <tr>
@@ -84,10 +85,10 @@
                                                     <!--<button pButton type="button" icon="pi pi-check" class="small-button" [ngClass]="{'p-button-success': hora.seleccionado}" (click)="toggleHoraSeleccionada(hora)"></button>-->
                                                     <button pButton 
                                                         type="button" 
-                                                        [icon]="horaOcupada.includes(hora.Horario) ? 'pi pi-times' : 'pi pi-check'" 
+                                                        [icon]="hora.seleccionado ? 'pi pi-times' : 'pi pi-circle'" 
                                                         class="small-button" 
                                                         [disabled]="hora.seleccionado"
-                                                        [ngClass]="{'p-button-danger': hora.seleccionado, 'p-button-success': !hora.seleccionado}" 
+                                                        [ngClass]="{'p-button-danger': hora.seleccionado, 'p-button-secondary': !hora.seleccionado}" 
                                                         (click)="toggleHoraSeleccionada(hora)">
                                                     </button>
                                                 </td>

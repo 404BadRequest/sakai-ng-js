@@ -55,7 +55,7 @@ export class NewResevaComponent implements OnInit {
   horariosContinuos: any[] = [];
   horariosUtilizados: any[] = [];
   horaOcupada: string[] = [];
-  horaOcupadasIds: any[] = [];
+
   
   constructor(
     private parametroDetalle: ParametroDetalleService,
@@ -176,6 +176,11 @@ export class NewResevaComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Por favor complete todos los campos para continuar', life: 3000 });
         return; // Detener el proceso de pasar al siguiente paso
       }
+      //se restaura calendario y se limpian los seleccione que quedaron paso anterior.
+      this.dateCalendar = null;
+      this.limpiarGrupoFechas();
+      this.selectedDate = null;
+      this.horasSeleccionadas = [];
     }else if(this.items[this.activeIndex]['label'] === 'Horario'){
       if(!this.selectedDate || this.horasSeleccionadas.length === 0){
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Por favor complete todos los campos para continuar', life: 3000 });
@@ -235,26 +240,42 @@ export class NewResevaComponent implements OnInit {
       
       //console.log("Dependencias encontradas; ",dependeciasEncontradas);
       if (dependeciasEncontradas.length > 0) {
+        const horaOcupadasIds: any[] = [];
         dependeciasEncontradas.forEach(dependencia => {
           //console.log(dependencia);
-          this.horaOcupadasIds.push(dependencia.HoraSeleccionadaId);
+          horaOcupadasIds.push(dependencia.HoraSeleccionadaId);
         });
+        //console.log("horas ocupadas id: ", horaOcupadasIds);
         //Se agregan validación para que muestre las fechas en otro color cuando están ocupadas las dependencias
         this.gruposDeHoras.forEach(grupo => {
               grupo.forEach(item => {
-                  if (this.horaOcupadasIds.includes(item.Id)) {
+                  if (horaOcupadasIds.includes(item.Id)) {
                       item.seleccionado = true;
+                  }else{
+                    delete item.seleccionado;
                   }
               });
         });
     }else{
         console.log('No se encontraron dependencias');
+        // Eliminar la propiedad 'seleccionado' de todos los elementos
+        this.limpiarGrupoFechas();
+        this.horasSeleccionadas = [];
       }
     } else {
         console.log('No se encontraron objetos con la fecha buscada.');
+        this.limpiarGrupoFechas();
+        this.horasSeleccionadas = [];
     }
-    
     this.selectedDate = event;
+  }
+  
+  limpiarGrupoFechas(){
+    this.gruposDeHoras.forEach(grupo => {
+      grupo.forEach(item => {
+          delete item.seleccionado;
+      });
+    });
   }
 
   formatDate(date: Date): string {
