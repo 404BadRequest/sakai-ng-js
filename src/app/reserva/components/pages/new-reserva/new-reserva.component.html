@@ -77,6 +77,15 @@
                                 <div class="col-5 align-items-center justify-content-center">
                                     <p>Fecha seleccionada: <b>{{ selectedDate | date: 'dd-MM-yyyy' }}</b></p>
                                     <p>Dependencia seleccionada: <b>{{ selectedItemsDependencias.name }}</b></p>
+                                    <p>Limpiar seleccionados: 
+                                        <button pButton 
+                                            type="button" 
+                                            [icon]="'pi pi-undo'" 
+                                            class="small-button_limpiar" 
+                                            [ngClass]="'p-button-success'" 
+                                            (click)="limpiarHorasSeleccionadas()">
+                                        </button>
+                                    </p>
                                     <p-table [value]="gruposDeHoras" [paginator]="false" [rows]="10" [columns]="cols">
                                         <ng-template pTemplate="body" let-grupoDeHoras>
                                             <tr>

@@ -206,6 +206,7 @@ export class NewResevaComponent implements OnInit {
   }
 
   showSelectedDate(event: any) {
+    this.horasSeleccionadas = [];
     const horariosUtilizados = this.horariosUtilizados;
     //console.log("Horarios utilizados: ", horariosUtilizados);
     const fechaSeleccionada = new Date(event); // Convertir a objeto Date si no lo es
@@ -359,5 +360,22 @@ export class NewResevaComponent implements OnInit {
         this.mostrarContenido = true; // Muestra el contenido de la página nuevamente
       }
     );
+  }
+  limpiarHorasSeleccionadas(){
+    //console.log("horas seleccionadas: ", this.horasSeleccionadas);
+    const horaOcupadasIds: any[] = [];
+        this.horasSeleccionadas.forEach(dependencia => {
+          horaOcupadasIds.push(dependencia.Id);
+        });
+    //console.log("horas ids: ",horaOcupadasIds);
+    this.gruposDeHoras.forEach(grupo => {
+      grupo.forEach(item => {
+          if (horaOcupadasIds.includes(item.Id)) {
+            delete item.seleccionado;
+          }
+      });
+    });
+    this.horasSeleccionadas = [];
+    //console.log("horas seleccionadas post: ", this.horasSeleccionadas);
   }
 }

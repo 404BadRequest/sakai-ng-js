@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
         { path: 'calendar', loadChildren: () => import('./calendar/calendar.module').then(m => m.CalendarModule) },
         { path: 'mis-reservas', loadChildren: () => import('./mis-reservas/mis-reservas.module').then(m => m.MisReservasModule) },
         { path: 'mis-aprobaciones', loadChildren: () => import('./mis-aprobaciones/mis-aprobaciones.module').then(m => m.MisAprobacionesModule) },
-        { path: 'detail-reserva', loadChildren: () => import('./detail-reserva/detail-reserva.module').then(m => m.DetailReservaModule) },
+        { path: 'detail-reserva/:Id', loadChildren: () => import('./detail-reserva/detail-reserva.module').then(m => m.DetailReservaModule) },
         { path: '**', redirectTo: '/notfound' }
     ])],
     exports: [RouterModule]

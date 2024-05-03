@@ -1,18 +1,58 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid'
 import esLocale from '@fullcalendar/core/locales/es-Us'
 import listPlugin from '@fullcalendar/list'
+import { HorariosService } from 'src/app/reserva/service/Horarios.service';
+import { EventInput } from '@fullcalendar/core';
 
 @Component({
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss'
 })
-export class CalendarComponent {
+export class CalendarComponent implements OnInit{
 
   eventDetails: any;
   infoUserDialog = false;
+  horariosUtilizados: any[] = [];
+  eventosCalendario: any[] = [];
+  calendarEvents: EventInput[] = [];
+  constructor(
+    private horarioService : HorariosService
+  ){}
+
+  ngOnInit(): void {
+    
+    this.getHorariosUtilizados();
+  }
   
+  getHorariosUtilizados() {
+    this.horarioService.getHorariosUtilizados().subscribe(
+      (horarios: any[]) => {
+        this.horariosUtilizados = horarios;
+        this.mapHorariosToEvents(); // Mapear los horarios a eventos del calendario
+        console.log("Horarios utilizados por dependencia: ", this.calendarEvents);
+      },
+      error => {
+        console.error('Error al obtener los horarios utilizados por dependencia:', error);
+      }
+    );
+  }
+
+  mapHorariosToEvents() {
+    this.calendarEvents = this.horariosUtilizados.map(horario => {
+      const fechaSeleccionada = new Date(horario.FechaReserva); // Convertir a objeto Date si no lo es
+      //fechaSeleccionada.setHours(fechaSeleccionada.getHours());
+      const fechaFormateada = this.formatDate(fechaSeleccionada);
+      
+      return {
+        title: horario.NombreReserva, 
+        dependencia: horario.NombreDependencia,
+        start: fechaFormateada+"T"+horario.HoraSeleccionada, 
+        end: '',
+      };
+    });
+  }
   calendarOptions = {
     plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
     initialView: 'dayGridMonth', // Vista inicial del calendario (mes)
@@ -21,6 +61,7 @@ export class CalendarComponent {
     selectable: true, // Permite seleccionar rangos de tiempo
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
+    dayMaxEvents: 2,
     views: {
       dayGridMonth: { // Vista de mes
         type: 'dayGridMonth',
@@ -42,11 +83,12 @@ export class CalendarComponent {
     },
   };
 
-  calendarEvents = [ // Define los eventos del calendario
-    { title: 'Reserva laboratorio de computación', date: '2024-03-20T10:00:00', end: '2024-03-20T11:00:00' },
-    { title: 'Reserva laboratorio de computación', date: '2024-03-20T15:00:00', end: '2024-03-20T17:00:00' },
-    { title: 'Reserva sala 202', date: '2024-03-19T14:30:00', end: '2024-03-19T17:00:00' }
-  ];
+  formatDate(date: Date): string {
+    const year = date.getUTCFullYear();
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const day = date.getUTCDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  } 
 
   handleDateSelect(selectInfo: any) {
     const title = prompt('Ingrese el título del evento:');
@@ -65,6 +107,7 @@ export class CalendarComponent {
   handleEventClick(clickInfo: any) {
     this.eventDetails = {
       title: clickInfo.event.title,
+      dependencia: clickInfo.event.extendedProps.dependencia, // Obtener el nombre de la dependencia del evento
       start: clickInfo.event.start,
       end: clickInfo.event.end
     };
