@@ -2,6 +2,13 @@
     <div class="col-12">
         <div class="card">
             <h4>Calendario</h4>
+                <select 
+                  [(ngModel)]="filtroEventos" 
+                  (change)="onChangeFiltroEventos()"
+                  >
+                  <option value="todos">Todos las reservas</option>
+                  <option value="reservas">Ms reservas</option>
+                </select>
                 <full-calendar
                     [options]="calendarOptions"
                     [events]="calendarEvents"
@@ -10,6 +17,9 @@
     </div>
     <p-dialog [(visible)]="infoUserDialog" header="Detalle de la reserva" [modal]="true" [style]="{width:'450px'}">
         <div class="p-grid p-dir-col">
+          <div class="p-col">
+            <p>Id Reserva:<b> {{ eventDetails?.id }}</b></p>
+          </div>
             <div class="p-col">
               <p>Nombre reserva:<b> {{ eventDetails?.title }}</b></p>
             </div>

@@ -4,13 +4,15 @@ import { CalendarRoutingModule } from './calendar.routing.module';
 import { CalendarComponent } from './calendar.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { DialogModule } from 'primeng/dialog';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     imports: [
         CommonModule,
         CalendarRoutingModule,
         FullCalendarModule,
-        DialogModule
+        DialogModule,
+        FormsModule
     ],
     declarations: [CalendarComponent]
 })

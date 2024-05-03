@@ -17,6 +17,8 @@ export class CalendarComponent implements OnInit{
   horariosUtilizados: any[] = [];
   eventosCalendario: any[] = [];
   calendarEvents: EventInput[] = [];
+  filtroEventos: string = 'todos';
+  
   constructor(
     private horarioService : HorariosService
   ){}
@@ -40,16 +42,19 @@ export class CalendarComponent implements OnInit{
   }
 
   mapHorariosToEvents() {
+    
     this.calendarEvents = this.horariosUtilizados.map(horario => {
       const fechaSeleccionada = new Date(horario.FechaReserva); // Convertir a objeto Date si no lo es
       //fechaSeleccionada.setHours(fechaSeleccionada.getHours());
       const fechaFormateada = this.formatDate(fechaSeleccionada);
       
       return {
+        id: horario.Id,
         title: horario.NombreReserva, 
         dependencia: horario.NombreDependencia,
         start: fechaFormateada+"T"+horario.HoraSeleccionada, 
         end: '',
+        color: horario.ColorDependencia,
       };
     });
   }
@@ -62,6 +67,7 @@ export class CalendarComponent implements OnInit{
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     dayMaxEvents: 2,
+    eventColor: 'color',
     views: {
       dayGridMonth: { // Vista de mes
         type: 'dayGridMonth',
@@ -106,11 +112,25 @@ export class CalendarComponent implements OnInit{
 
   handleEventClick(clickInfo: any) {
     this.eventDetails = {
+      id: clickInfo.event.idReserva,
       title: clickInfo.event.title,
       dependencia: clickInfo.event.extendedProps.dependencia, // Obtener el nombre de la dependencia del evento
       start: clickInfo.event.start,
       end: clickInfo.event.end
     };
     this.infoUserDialog = true;
+  }
+
+  // Método para manejar el cambio de selección en el select
+  onChangeFiltroEventos() {
+    if (this.filtroEventos === 'todos') {
+      this.mapHorariosToEvents();
+    } else if (this.filtroEventos === 'reservas') {
+      // Filtrar los eventos según la opción seleccionada (por ejemplo, solo mostrar reservas)
+      this.calendarEvents = this.calendarEvents.filter(evento => {
+        // Lógica para filtrar eventos según la opción seleccionada
+        return true; // Aquí debes implementar tu lógica de filtro
+      });
+    }
   }
 }
