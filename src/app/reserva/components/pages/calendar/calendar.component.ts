@@ -5,6 +5,8 @@ import esLocale from '@fullcalendar/core/locales/es-Us'
 import listPlugin from '@fullcalendar/list'
 import { HorariosService } from 'src/app/reserva/service/Horarios.service';
 import { EventInput } from '@fullcalendar/core';
+import { ReservaService } from 'src/app/reserva/service/reserva.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   templateUrl: './calendar.component.html',
@@ -18,9 +20,11 @@ export class CalendarComponent implements OnInit{
   eventosCalendario: any[] = [];
   calendarEvents: EventInput[] = [];
   filtroEventos: string = 'todos';
+  reservasInsumos: any [] = [];
   
   constructor(
-    private horarioService : HorariosService
+    private horarioService : HorariosService,
+    private reservaService : ReservaService
   ){}
 
   ngOnInit(): void {
@@ -41,23 +45,40 @@ export class CalendarComponent implements OnInit{
     );
   }
 
+  getReservasIdByInsumos(reservaId: string) {
+    return this.reservaService.getReservaIdByInsumo(reservaId);
+  }
+
   mapHorariosToEvents() {
-    
     this.calendarEvents = this.horariosUtilizados.map(horario => {
-      const fechaSeleccionada = new Date(horario.FechaReserva); // Convertir a objeto Date si no lo es
-      //fechaSeleccionada.setHours(fechaSeleccionada.getHours());
+      const fechaSeleccionada = new Date(horario.FechaReserva);
       const fechaFormateada = this.formatDate(fechaSeleccionada);
-      
       return {
-        id: horario.Id,
+        idReserva: horario.IdReserva,
         title: horario.NombreReserva, 
         dependencia: horario.NombreDependencia,
-        start: fechaFormateada+"T"+horario.HoraSeleccionada, 
+        start: fechaFormateada + "T" + horario.HoraSeleccionada, 
         end: '',
         color: horario.ColorDependencia,
+        insumosDependencia: [] // Inicializar como un arreglo vacío
       };
     });
+  
+    // Obtener los insumos para cada reserva
+    const requests = this.calendarEvents.map(evento => {
+      return this.getReservasIdByInsumos(evento['idReserva']).toPromise();
+    });
+  
+    // Esperar a que todas las solicitudes se completen usando Promise.all
+    Promise.all(requests).then(results => {
+      results.forEach((reservasInsumos, index) => {
+        this.calendarEvents[index]['insumosDependencia'] = reservasInsumos.map((reservaInsumo: { NombreInsumo: any; }) => reservaInsumo.NombreInsumo);
+      });
+    }).catch(error => {
+      console.error('Error al obtener los insumos por dependencia:', error);
+    });
   }
+
   calendarOptions = {
     plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
     initialView: 'dayGridMonth', // Vista inicial del calendario (mes)
@@ -104,19 +125,28 @@ export class CalendarComponent implements OnInit{
       calendarApi.addEvent({
         title,
         start: selectInfo.startStr,
-        end: selectInfo.endStr, // La hora de finalización se calcula automáticamente sumando 3 horas a la hora de inicio
+        end: selectInfo.endStr,
         allDay: selectInfo.allDay
       });
     }
   }
 
   handleEventClick(clickInfo: any) {
+    const idReserva = clickInfo.event.extendedProps.idReserva; // Obtener idReserva desde extendedProps
+    const title = clickInfo.event.title;
+    const dependencia = clickInfo.event.extendedProps.dependencia;
+    const start = clickInfo.event.start;
+    const end = clickInfo.event.end;
+    const insumosDependencia = clickInfo.event.extendedProps.insumosDependencia;
+    console.log("click info: ", insumosDependencia);
+  
     this.eventDetails = {
-      id: clickInfo.event.idReserva,
-      title: clickInfo.event.title,
-      dependencia: clickInfo.event.extendedProps.dependencia, // Obtener el nombre de la dependencia del evento
-      start: clickInfo.event.start,
-      end: clickInfo.event.end
+      idReserva,
+      title,
+      dependencia,
+      start,
+      end,
+      insumosDependencia
     };
     this.infoUserDialog = true;
   }

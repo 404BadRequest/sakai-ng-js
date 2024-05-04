@@ -18,7 +18,7 @@
     <p-dialog [(visible)]="infoUserDialog" header="Detalle de la reserva" [modal]="true" [style]="{width:'450px'}">
         <div class="p-grid p-dir-col">
           <div class="p-col">
-            <p>Id Reserva:<b> {{ eventDetails?.id }}</b></p>
+            <p>Id Reserva:<b> {{ eventDetails?.idReserva }}</b></p>
           </div>
             <div class="p-col">
               <p>Nombre reserva:<b> {{ eventDetails?.title }}</b></p>
@@ -26,6 +26,15 @@
             <div class="p-col">
               <p>Nombre dependencia:<b> {{ eventDetails?.dependencia }}</b></p>
             </div>
+            <!--<div class="p-col">
+              <p>Insumos dependencia:
+                <b> 
+                  <ul>
+                    <li *ngFor="let insumo of eventDetails?.insumosDependencia">{{ insumo }}</li>
+                  </ul>
+                </b>
+              </p>
+            </div>-->
             <div class="p-col">
               <p>Fecha y hora seleccionada:<b> {{ eventDetails?.start | date: 'yyyy-MM-dd HH:mm:ss'}}</b></p>
             </div>
