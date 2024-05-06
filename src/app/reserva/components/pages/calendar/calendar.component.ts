@@ -87,7 +87,7 @@ export class CalendarComponent implements OnInit{
     selectable: true, // Permite seleccionar rangos de tiempo
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
-    dayMaxEvents: 2,
+    dayMaxEvents: 6,
     eventColor: 'color',
     views: {
       dayGridMonth: { // Vista de mes
