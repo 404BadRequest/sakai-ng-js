@@ -7,37 +7,88 @@ import { HorariosService } from 'src/app/reserva/service/Horarios.service';
 import { EventInput } from '@fullcalendar/core';
 import { ReservaService } from 'src/app/reserva/service/reserva.service';
 import { forkJoin } from 'rxjs';
+import { SelectItem } from 'primeng/api/selectitem';
+import { InsumosService } from 'src/app/reserva/service/insumos.service';
+import { DependenciaService } from 'src/app/reserva/service/dependencia.service';
 
 @Component({
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss'
 })
 export class CalendarComponent implements OnInit{
-
+  
   eventDetails: any;
   infoUserDialog = false;
   horariosUtilizados: any[] = [];
+  horariosUtilizadosByDependenciaId: any[] = [];
   eventosCalendario: any[] = [];
   calendarEvents: EventInput[] = [];
   filtroEventos: string = 'todos';
   reservasInsumos: any [] = [];
-  
+  filtroInsumos: string = 'todos';
+  filtroDependencias: string = 'todos';
+  dependencias: SelectItem[] = [];
+  insumos: SelectItem[] = [];
+
   constructor(
     private horarioService : HorariosService,
-    private reservaService : ReservaService
+    private reservaService : ReservaService,
+    private insumoService: InsumosService,
+    private depndenciaService: DependenciaService
   ){}
 
   ngOnInit(): void {
-    
     this.getHorariosUtilizados();
+    this.getInsumos();
+    this.getDependencias();
   }
   
+  getInsumos(){
+    this.insumoService.getInsumosApiJs().subscribe(
+      (insumos: any[]) => {
+        this.insumos = insumos.map(insumo => {
+          return {
+            label: insumo.Nombre, // El nombre de la dependencia
+            value: { 
+              id: insumo.Id, // El ID de la dependencia
+              name: insumo.Nombre, // El nombre de la dependencia
+              code: insumo.Id // El código de la dependencia
+            }
+          };
+        });
+      },
+      error => {
+        console.error('Error al obtener los insumos:', error);
+      }
+    );
+  }
+
+  getDependencias(){
+    this.depndenciaService.getDependenciasApiJs().subscribe(
+      (dependencias: any[]) => {
+        this.dependencias = dependencias.map(dependencia => {
+          return {
+            label: dependencia.Nombre, // El nombre de la dependencia
+            value: { 
+              id: dependencia.Id, // El ID de la dependencia
+              name: dependencia.Nombre, // El nombre de la dependencia
+              code: dependencia.Id // El código de la dependencia
+            }
+          };
+        });
+      },
+      error => {
+        console.error('Error al obtener los insumos:', error);
+      }
+    );
+  }
+
   getHorariosUtilizados() {
     this.horarioService.getHorariosUtilizados().subscribe(
       (horarios: any[]) => {
         this.horariosUtilizados = horarios;
         this.mapHorariosToEvents(); // Mapear los horarios a eventos del calendario
-        console.log("Horarios utilizados por dependencia: ", this.calendarEvents);
+        //console.log("Horarios utilizados por dependencia: ", this.calendarEvents);
       },
       error => {
         console.error('Error al obtener los horarios utilizados por dependencia:', error);
@@ -49,8 +100,30 @@ export class CalendarComponent implements OnInit{
     return this.reservaService.getReservaIdByInsumo(reservaId);
   }
 
-  mapHorariosToEvents() {
-    this.calendarEvents = this.horariosUtilizados.map(horario => {
+  getHorariosUtilizadosByDependenciaId(dependenciaId: string) {
+    this.horarioService.getHorariosUtilizadosByDependenciaId(dependenciaId).subscribe(
+      (horarios: any[]) => {
+        this.horariosUtilizadosByDependenciaId = horarios;
+        this.mapHorariosToEvents(dependenciaId); // Mapear los horarios a eventos del calendario
+        //console.log("Horarios utilizados por dependencia: ", this.calendarEvents);
+      },
+      error => {
+        console.error('Error al obtener los horarios utilizados por dependencia:', error);
+      }
+    );
+  }
+
+  mapHorariosToEvents(dependenciaId?: string, insumoid?: string) {
+    let horariosFiltrados = this.horariosUtilizados;
+    if (dependenciaId) {
+      horariosFiltrados = this.horariosUtilizados.filter(horario => horario.DependenciaId === dependenciaId);
+    }
+    if (insumoid) {
+      console.log("insumo id; ",insumoid);
+      horariosFiltrados = this.horariosUtilizados.filter(horario => horario.InsumosConcatenados.includes(insumoid));
+    }
+  
+    this.calendarEvents = horariosFiltrados.map(horario => {
       const fechaSeleccionada = new Date(horario.FechaReserva);
       const fechaFormateada = this.formatDate(fechaSeleccionada);
       return {
@@ -60,22 +133,8 @@ export class CalendarComponent implements OnInit{
         start: fechaFormateada + "T" + horario.HoraSeleccionada, 
         end: '',
         color: horario.ColorDependencia,
-        insumosDependencia: [] // Inicializar como un arreglo vacío
+        insumosDependencia: horario.InsumosConcatenadosName // Inicializar como un arreglo vacío
       };
-    });
-  
-    // Obtener los insumos para cada reserva
-    const requests = this.calendarEvents.map(evento => {
-      return this.getReservasIdByInsumos(evento['idReserva']).toPromise();
-    });
-  
-    // Esperar a que todas las solicitudes se completen usando Promise.all
-    Promise.all(requests).then(results => {
-      results.forEach((reservasInsumos, index) => {
-        this.calendarEvents[index]['insumosDependencia'] = reservasInsumos.map((reservaInsumo: { NombreInsumo: any; }) => reservaInsumo.NombreInsumo);
-      });
-    }).catch(error => {
-      console.error('Error al obtener los insumos por dependencia:', error);
     });
   }
 
@@ -138,7 +197,7 @@ export class CalendarComponent implements OnInit{
     const start = clickInfo.event.start;
     const end = clickInfo.event.end;
     const insumosDependencia = clickInfo.event.extendedProps.insumosDependencia;
-    console.log("click info: ", insumosDependencia);
+    //console.log("click info: ", insumosDependencia);
   
     this.eventDetails = {
       idReserva,
@@ -152,15 +211,19 @@ export class CalendarComponent implements OnInit{
   }
 
   // Método para manejar el cambio de selección en el select
-  onChangeFiltroEventos() {
-    if (this.filtroEventos === 'todos') {
-      this.mapHorariosToEvents();
-    } else if (this.filtroEventos === 'reservas') {
-      // Filtrar los eventos según la opción seleccionada (por ejemplo, solo mostrar reservas)
-      this.calendarEvents = this.calendarEvents.filter(evento => {
-        // Lógica para filtrar eventos según la opción seleccionada
-        return true; // Aquí debes implementar tu lógica de filtro
-      });
+  onChangeFiltroInsumos(selectedInsumo: any) {
+    if(selectedInsumo){
+      const insumoId= selectedInsumo.id;
+      this.mapHorariosToEvents(null, insumoId);
     }
+  }
+  onChangeFiltroDependencias(selectedDependencia: any) {
+    if(selectedDependencia){
+      const dependenciaId= selectedDependencia.id;
+      this.mapHorariosToEvents(dependenciaId);
+    }
+  }
+  onClearDropdown(){
+    this.getHorariosUtilizados();
   }
 }

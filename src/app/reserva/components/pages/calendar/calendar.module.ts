@@ -5,6 +5,8 @@ import { CalendarComponent } from './calendar.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
     imports: [
@@ -12,7 +14,9 @@ import { FormsModule } from '@angular/forms';
         CalendarRoutingModule,
         FullCalendarModule,
         DialogModule,
-        FormsModule
+        FormsModule,
+        MultiSelectModule,
+        DropdownModule,
     ],
     declarations: [CalendarComponent]
 })

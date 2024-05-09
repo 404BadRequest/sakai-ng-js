@@ -19,4 +19,9 @@ export class HorariosService {
         const url = `${this.urlApi}/horarios/utilizados`;
         return this.http.get<any>(url);
     }
+
+    getHorariosUtilizadosByDependenciaId(Id: string): Observable<any>{
+        const url = `${this.urlApi}/horarios/utilizados/dependencia/${Id}`;
+        return this.http.get<any>(url);
+    }
 }

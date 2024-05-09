@@ -1,14 +1,41 @@
 <div class="grid">
     <div class="col-12">
         <div class="card">
-            <h4>Calendario</h4>
-                <select 
-                  [(ngModel)]="filtroEventos" 
-                  (change)="onChangeFiltroEventos()"
-                  >
-                  <option value="todos">Todos las reservas</option>
-                  <option value="reservas">Ms reservas</option>
-                </select>
+            <div class="card p-fluid">
+              <h5>Filtros calendario</h5>
+              <div class="p-formgrid grid">
+                <div class="field col">
+                  <label htmlFor="name2">Dependencias</label>
+                  <!--<p-dropdown [options]="cities" [(ngModel)]="selectedDrop" placeholder="Select a City" [showClear]="true"></p-dropdown>-->
+                  <p-dropdown  
+                    [options]="dependencias" 
+                    (onChange)="onChangeFiltroDependencias($event.value)" 
+                    placeholder="Seleccione una dependencia" 
+                    (onClear)="onClearDropdown()"
+                    [showClear]="true"
+                    ></p-dropdown>
+                  <!--<select [(ngModel)]="filtroDependencias" (change)="onChangeFiltroDependencias()">
+                    <option value="todos">Todos las reservas</option>
+                    <option value="reservas">Más reservas</option>
+                  </select>-->
+                </div>
+                <div class="field col">
+                  <label htmlFor="email2">Insumos</label>
+                  <p-dropdown 
+                    [options]="insumos" 
+                    (onChange)="onChangeFiltroInsumos($event.value)" 
+                    placeholder="Seleccione un insumo"
+                    (onClear)="onClearDropdown()"
+                    [showClear]="true"
+                    >
+                  </p-dropdown>
+                  <!--<select [(ngModel)]="filtroInsumos" (change)="onChangeFiltroInsumos()">
+                    <option value="todos">Todos los insumos</option>
+                    <option value="reservas">Más reservas</option>
+                  </select>-->
+                </div>
+              </div>
+            </div>
                 <full-calendar
                     [options]="calendarOptions"
                     [events]="calendarEvents"
@@ -26,15 +53,9 @@
             <div class="p-col">
               <p>Nombre dependencia:<b> {{ eventDetails?.dependencia }}</b></p>
             </div>
-            <!--<div class="p-col">
-              <p>Insumos dependencia:
-                <b> 
-                  <ul>
-                    <li *ngFor="let insumo of eventDetails?.insumosDependencia">{{ insumo }}</li>
-                  </ul>
-                </b>
-              </p>
-            </div>-->
+            <div class="p-col">
+              <p>Insumos dependencia:<b> {{ eventDetails?.insumosDependencia }}</b></p>
+            </div>
             <div class="p-col">
               <p>Fecha y hora seleccionada:<b> {{ eventDetails?.start | date: 'yyyy-MM-dd HH:mm:ss'}}</b></p>
             </div>
