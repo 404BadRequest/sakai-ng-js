@@ -15,7 +15,7 @@ export class AppMenuComponent implements OnInit {
     ngOnInit() {
         this.model = [
             {
-                label: 'Home',
+                label: 'Inicio',
                 items: [
                     { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/dashboard'] }
                 ]
@@ -106,12 +106,12 @@ export class AppMenuComponent implements OnInit {
                         routerLink: ['/pages/new-reserva']
                     },
                     {
-                        label: 'Mis solicitudes',
+                        label: 'Mis reservas',
                         icon: 'pi pi-fw pi-folder-open',
                         routerLink: ['/pages/mis-reservas']
                     },
                     {
-                        label: 'Mis reservas',
+                        label: 'Otras reservas',
                         icon: 'pi pi-fw pi-check-square',
                         routerLink: ['/pages/mis-aprobaciones']
                     },
@@ -122,21 +122,21 @@ export class AppMenuComponent implements OnInit {
                     },
                 ]
             },
-            {
+            /*{
                 label: 'Administrador',
                 items: [
                     /*{
                         label: 'Salas',
                         icon: 'pi pi-fw pi-bookmark',
                         routerLink: ['/pages/admin-salas']
-                    },*/
+                    },
                     {
                         label: 'Usuarios',
                         icon: 'pi pi-fw pi-id-card',
                         routerLink: ['/pages/admin-usuarios']
                     },
                 ]
-            },
+            },*/
             /*{
                 label: 'Hierarchy',
                 items: [

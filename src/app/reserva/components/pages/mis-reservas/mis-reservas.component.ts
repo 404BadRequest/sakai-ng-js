@@ -28,7 +28,7 @@ export class MisReservasComponent implements OnInit{
     this.reservasService.getReservaByUserId(userId).subscribe(
       (reseras: any[]) => {
         this.reservasByUser = reseras;
-        console.log("Reservas por usuario: ", this.reservasByUser);
+        //console.log("Reservas por usuario: ", this.reservasByUser);
       },
       error => {
         console.error('Error al obtener las reservas del usuario:', error);

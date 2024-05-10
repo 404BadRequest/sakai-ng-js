@@ -52,7 +52,7 @@
                             "outputHashing": "all"
                         },
                         "development": {
-                            "buildOptimizer": false,
+                            "buildOptimizer": false,                            
                             "optimization": false,
                             "vendorChunk": true,
                             "extractLicenses": false,
@@ -72,7 +72,10 @@
                             "buildTarget": "sakai-ng:build:development"
                         }
                     },
-                    "defaultConfiguration": "development"
+                    "defaultConfiguration": "development",
+                    "options": {
+                        "ssl": true
+                    }
                 },
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",

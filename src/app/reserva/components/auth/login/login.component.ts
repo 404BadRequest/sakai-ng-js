@@ -59,7 +59,11 @@ export class LoginComponent implements OnInit, OnDestroy{
           }
         } else {
           if (this.msalGuardConfig.authRequest) {
+            
             this.authService.loginRedirect({ ...this.msalGuardConfig.authRequest } as RedirectRequest);
+            console.log("else");
+            //return;
+
           } else {
             this.authService.loginRedirect();
           }

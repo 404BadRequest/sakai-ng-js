@@ -119,7 +119,6 @@ export class CalendarComponent implements OnInit{
       horariosFiltrados = this.horariosUtilizados.filter(horario => horario.DependenciaId === dependenciaId);
     }
     if (insumoid) {
-      console.log("insumo id; ",insumoid);
       horariosFiltrados = this.horariosUtilizados.filter(horario => horario.InsumosConcatenados.includes(insumoid));
     }
   
@@ -135,7 +134,7 @@ export class CalendarComponent implements OnInit{
         color: horario.ColorDependencia,
         insumosDependencia: horario.InsumosConcatenadosName // Inicializar como un arreglo vacío
       };
-    });
+    })
   }
 
   calendarOptions = {
@@ -167,7 +166,7 @@ export class CalendarComponent implements OnInit{
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,listMonth'
     },
-  };
+  }
 
   formatDate(date: Date): string {
     const year = date.getUTCFullYear();
