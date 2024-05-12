@@ -22,6 +22,9 @@ interface Horario {
   seleccionado: boolean;
   FechaReserva: string;
   HorarioId: number;
+  seleccionadoInLine: boolean;
+
+  //TODO: Se debe limpiar el botón seleecionadoInline para losc abios de día y cambios de salas.
 }
 
 @Component({
@@ -274,7 +277,7 @@ export class NewResevaComponent implements OnInit {
   limpiarGrupoFechas(){
     this.gruposDeHoras.forEach(grupo => {
       grupo.forEach(item => {
-          delete item.seleccionado;
+          delete item.seleccionadoInLine;
       });
     });
   }
@@ -287,8 +290,8 @@ export class NewResevaComponent implements OnInit {
   }
 
   toggleHoraSeleccionada(hora: Horario) {
-    hora.seleccionado = !hora.seleccionado;
-    if (hora.seleccionado) {
+    hora.seleccionadoInLine = !hora.seleccionadoInLine;
+    if (hora.seleccionadoInLine) {
         this.horasSeleccionadas.push(hora);
     } else {
         this.horasSeleccionadas = this.horasSeleccionadas.filter(item => item !== hora);
