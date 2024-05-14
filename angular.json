@@ -72,10 +72,7 @@
                             "buildTarget": "sakai-ng:build:development"
                         }
                     },
-                    "defaultConfiguration": "development",
-                    "options": {
-                        "ssl": true
-                    }
+                    "defaultConfiguration": "development"
                 },
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
