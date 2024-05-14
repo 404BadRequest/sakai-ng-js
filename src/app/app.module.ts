@@ -54,7 +54,7 @@ import { PasswordModule } from 'primeng/password';
   window.navigator.userAgent.indexOf('Trident/') > -1;
 
   export function loggerCallback(logLevel: LogLevel, message: string) {
-    console.log(message);
+    //console.log(message);
   }
 
   export function MSALInstanceFactory(): IPublicClientApplication {
@@ -114,7 +114,7 @@ import { PasswordModule } from 'primeng/password';
         AppRoutingModule,
         AppLayoutModule,
         HttpClientModule,
-        MsalModule
+        MsalModule,
     ],
     providers: [
         { 

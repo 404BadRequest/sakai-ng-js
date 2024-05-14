@@ -5,6 +5,16 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from "./service/app.layout.service";
+import { HttpClient } from '@angular/common/http';
+
+const GRAPH_ENDPOINT = 'https://graph.microsoft.com/v1.0/me';
+
+type ProfileType = {
+  givenName?: string,
+  surname?: string,
+  userPrincipalName?: string,
+  id?: string
+}
 
 @Component({
     selector: 'app-topbar',
@@ -16,6 +26,9 @@ export class AppTopBarComponent implements OnInit{
     loginDisplay: boolean = false;
     isIframe = false;
     private readonly _destroying$ = new Subject<void>();
+    profile!: ProfileType;
+    userProfile: string = "";
+    loading = [false, false, false, false];
 
     @ViewChild('menubutton') menuButton!: ElementRef;
 
@@ -27,7 +40,8 @@ export class AppTopBarComponent implements OnInit{
         @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
         private authService: MsalService,
         private msalBroadcastService: MsalBroadcastService,
-        public layoutService: LayoutService
+        public layoutService: LayoutService,
+        private http: HttpClient
     ) { }
 
     ngOnInit(): void {
@@ -40,8 +54,12 @@ export class AppTopBarComponent implements OnInit{
           )
           .subscribe(() => {
             this.setLoginDisplay();
+            if(this.loginDisplay){
+                this.getProfile();
+            }
           });
-      }
+    }
+      
       setLoginDisplay() {
         this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
       }
@@ -85,4 +103,16 @@ export class AppTopBarComponent implements OnInit{
         this._destroying$.next(undefined);
         this._destroying$.complete();
       }
+
+      getProfile() {
+        this.http.get(GRAPH_ENDPOINT)
+          .subscribe(profile => {
+            this.profile = profile;
+            this.userProfile = this.profile.userPrincipalName;
+          });
+      }
+    load(index: number) {
+        this.loading[index] = true;
+        setTimeout(() => this.loading[index] = false, 1000);
+    }
 }

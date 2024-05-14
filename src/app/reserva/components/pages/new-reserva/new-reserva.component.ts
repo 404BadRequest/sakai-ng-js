@@ -277,7 +277,7 @@ export class NewResevaComponent implements OnInit {
   limpiarGrupoFechas(){
     this.gruposDeHoras.forEach(grupo => {
       grupo.forEach(item => {
-          delete item.seleccionadoInLine;
+          delete item.seleccionado;
       });
     });
   }
@@ -290,8 +290,8 @@ export class NewResevaComponent implements OnInit {
   }
 
   toggleHoraSeleccionada(hora: Horario) {
-    hora.seleccionadoInLine = !hora.seleccionadoInLine;
-    if (hora.seleccionadoInLine) {
+    hora.seleccionado = !hora.seleccionado;
+    if (hora.seleccionado) {
         this.horasSeleccionadas.push(hora);
     } else {
         this.horasSeleccionadas = this.horasSeleccionadas.filter(item => item !== hora);

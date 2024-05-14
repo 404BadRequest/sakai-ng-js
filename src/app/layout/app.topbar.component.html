@@ -13,17 +13,8 @@
     </button>
 
     <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-        <button class="p-link layout-topbar-button">
-            <i class="pi pi-user"></i>
-            <span>Profile</span>
-        </button>
-        
-        <button *ngIf="!loginDisplay" (click)="login()">Iniciar sesión</button>
-        <button *ngIf="loginDisplay" (click)="logout()">Cerrar sesión</button>
-
-        <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
-            <i class="pi pi-cog"></i>
-            <span>Settings</span>
-        </button>
+        <p-chip label="Iniciar sesión" icon="pi pi-microsoft" *ngIf="!loginDisplay" (click)="login()" styleClass="m-1" class="cursor-pointer"></p-chip>
+        <p-chip label="{{userProfile}}" icon="pi pi-microsoft" *ngIf="loginDisplay" styleClass="m-1"></p-chip>
+        <p-button label="Cerrar sesión" *ngIf="loginDisplay" [loading]="loading[3]" (onClick)="load(3); logout()"></p-button>
     </div>
 </div>
