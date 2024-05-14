@@ -8,6 +8,7 @@ import { ParametroDetalleService } from 'src/app/reserva/service/parametroDetall
 import { ReservaService } from 'src/app/reserva/service/reserva.service';
 import { ReservaHorariosService } from 'src/app/reserva/service/reservaHorarios.service';
 import { SelectedDataService } from 'src/app/reserva/service/selected-data.service';
+import { UserService } from 'src/app/reserva/service/user.service';
 
 interface Hora {
   hora: number;
@@ -58,6 +59,7 @@ export class NewResevaComponent implements OnInit {
   horariosContinuos: any[] = [];
   horariosUtilizados: any[] = [];
   horaOcupada: string[] = [];
+  users: any[] = [];
 
   
   constructor(
@@ -71,7 +73,7 @@ export class NewResevaComponent implements OnInit {
     private reservaInsumoService: InsumosService,
     private reservaHorariosService: ReservaHorariosService,
     private horariosService: HorariosService,
-    private cdRef: ChangeDetectorRef
+    private userService: UserService
   ) { }
 
   ngOnInit() {
@@ -99,6 +101,19 @@ export class NewResevaComponent implements OnInit {
       { field: 'seleccionado', header: 'Seleccionar' }
     ];
 
+    const sessionUser = JSON.parse(localStorage.getItem('sessionUser'));
+    this.getUserByAzureId(sessionUser.azureId);
+  }
+
+  getUserByAzureId(azureId: string){
+    this.userService.getUserByAzureId(azureId).subscribe(
+      (usersAzure: any[]) => {
+        this.users = usersAzure;
+      },
+      error => {
+        console.error('Error al obtener los usuarios por azure id:', error);
+      }
+    )
   }
   getHorariosContinuo(){
     this.horariosService.getHorariosContinuo().subscribe(
@@ -168,7 +183,7 @@ export class NewResevaComponent implements OnInit {
   }
   
   nextStep() {
-    
+    console.log("user id: ", this.users);
     if (this.items[this.activeIndex]['label'] === 'Información') {
       if (!this.nombreReserva || !this.numeroPersonas || !this.comentarios) {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Por favor complete todos los campos para continuar', life: 3000 });
@@ -306,7 +321,7 @@ export class NewResevaComponent implements OnInit {
       NombreReserva: this.nombreReserva,
       NPersonas: this.numeroPersonas,
       Comentario: this.comentarios,
-      UserId: 13,
+      UserId: this.users['Id'],
       DependenciaId: this.selectedItemsDependencias,
       Insumos: this.selectedItems,
       FechaReserva: this.selectedDate

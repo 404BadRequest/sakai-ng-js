@@ -23,6 +23,9 @@ interface LayoutState {
     providedIn: 'root',
 })
 export class LayoutService {
+
+    public azureId: any;
+
     _config: AppConfig = {
         ripple: false,
         inputStyle: 'outlined',

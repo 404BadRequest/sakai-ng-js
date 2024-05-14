@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '../api/user';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -13,6 +12,11 @@ export class UserService {
 
     getUsersApiJs(): Observable<any>{
         const url = `${this.urlApi}/users/`;
+        return this.http.get<any>(url);
+    }
+
+    getUserByAzureId(AzureId: string): Observable<any>{
+        const url = `${this.urlApi}/users/azureId/${AzureId}`;
         return this.http.get<any>(url);
     }
 

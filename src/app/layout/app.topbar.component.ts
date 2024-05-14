@@ -29,12 +29,14 @@ export class AppTopBarComponent implements OnInit{
     profile!: ProfileType;
     userProfile: string = "";
     loading = [false, false, false, false];
+    users: any[] = [];
 
     @ViewChild('menubutton') menuButton!: ElementRef;
 
     @ViewChild('topbarmenubutton') topbarMenuButton!: ElementRef;
 
     @ViewChild('topbarmenu') menu!: ElementRef;
+    
 
     constructor(
         @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
@@ -109,6 +111,7 @@ export class AppTopBarComponent implements OnInit{
           .subscribe(profile => {
             this.profile = profile;
             this.userProfile = this.profile.userPrincipalName;
+            localStorage.setItem('sessionUser', JSON.stringify({ azureId: this.profile.id, userPrincipalName: this.profile.userPrincipalName}));
           });
       }
     load(index: number) {
