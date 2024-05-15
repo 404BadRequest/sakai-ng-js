@@ -4,6 +4,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { HorariosService } from 'src/app/reserva/service/Horarios.service';
 import { DependenciaService } from 'src/app/reserva/service/dependencia.service';
 import { InsumosService } from 'src/app/reserva/service/insumos.service';
+import { MailService } from 'src/app/reserva/service/mail.service';
 import { ParametroDetalleService } from 'src/app/reserva/service/parametroDetalle.service';
 import { ReservaService } from 'src/app/reserva/service/reserva.service';
 import { ReservaHorariosService } from 'src/app/reserva/service/reservaHorarios.service';
@@ -73,7 +74,7 @@ export class NewResevaComponent implements OnInit {
     private reservaInsumoService: InsumosService,
     private reservaHorariosService: ReservaHorariosService,
     private horariosService: HorariosService,
-    private userService: UserService
+    private userService: UserService,
   ) { }
 
   ngOnInit() {
@@ -115,6 +116,7 @@ export class NewResevaComponent implements OnInit {
       }
     )
   }
+  
   getHorariosContinuo(){
     this.horariosService.getHorariosContinuo().subscribe(
       (horarios: any[]) => {
@@ -183,7 +185,6 @@ export class NewResevaComponent implements OnInit {
   }
   
   nextStep() {
-    console.log("user id: ", this.users);
     if (this.items[this.activeIndex]['label'] === 'Información') {
       if (!this.nombreReserva || !this.numeroPersonas || !this.comentarios) {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Por favor complete todos los campos para continuar', life: 3000 });

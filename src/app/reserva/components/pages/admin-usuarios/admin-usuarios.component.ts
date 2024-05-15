@@ -12,47 +12,29 @@ import { RolService } from 'src/app/reserva/service/rol.service';
 })
 export class AdminUsuariosComponent implements OnInit{
     userDialog: boolean = false;
-
     deleteUserDialog: boolean = false;
-
     deleteUsersDialog: boolean = false;
-
     roles: any[] = [];
-
     rol: Rol = {};
-    
     users: User[] = [];
-
     user: User = {};
-
     selectedUsers: User[] = [];
-
     submitted: boolean = false;
-
     cols: any[] = [];
-
     statuses: any[] = [];
-
     rowsPerPageOptions = [5, 10, 20];
-
     selectedState: any = null;
-
-    dropdownItemsStates = [
-      { name: 'Activo', code: '1' },
-      { name: 'Inactivo', code: '2' }
-    ];
-
     selectedRols: any = null;
-
     dropdownItemsRols: any = null;
-
     selectedRole: any;
-
     loading: boolean = false;
-    
+    dropdownItemsStates = [
+        { name: 'Activo', code: '1' },
+        { name: 'Inactivo', code: '2' }
+      ];
+  
     constructor(private userService: UserService, private rolService: RolService, private messageService: MessageService, private cdr: ChangeDetectorRef) { }
-    
-    
+
     ngOnInit() {
       
       this.getUsers();
