@@ -45,6 +45,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
+import { EnvioMailService } from './reserva/service/mail.service';
 
   
   
@@ -144,7 +145,7 @@ import { PasswordModule } from 'primeng/password';
         CountryService, CustomerService, EventService, IconService, NodeService,
         PhotoService, ProductService, UserService, RolService, 
         ParametroDetalleService, DependenciaService, InsumosService, ReservaService, 
-        ReservaHorariosService, HorariosService
+        ReservaHorariosService, HorariosService, EnvioMailService
     ],
     bootstrap: [AppComponent, MsalRedirectComponent]
 })

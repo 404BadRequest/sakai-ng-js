@@ -20,11 +20,15 @@ export class InsumosService {
         return this.http.get<any>(url);
     }
 
-    getInsumoById(Id: string, parametrosDetalle: any): Observable<any>{
+    getInsumoById(Id: string): Observable<any>{
         const url = `${this.urlApi}/insumos/${Id}`;
         return this.http.get<any>(url);
     }
 
+    getInsumoByIdUser(Id: string): Observable<any>{
+        const url = `${this.urlApi}/insumos/user/${Id}`;
+        return this.http.get<any>(url);
+    }
     getCountInsumos(Id: string): Observable<any>{
         const url = `${this.urlApi}/insumos/count`;
         return this.http.get<any>(url);

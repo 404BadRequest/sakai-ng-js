@@ -3,15 +3,15 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class MailService {
+export class EnvioMailService {
 
     //private urlApi = 'https://backend-reserva-node.azurewebsites.net';
     private urlApi = 'http://localhost:4000';
 
     constructor(private http: HttpClient) { }
 
-    sendMail(users: any): Observable<any>{
-        const url = `${this.urlApi}/sendMail/`;
-        return this.http.post<any>(url, users);
+    sendMail(params: any): Observable<any>{
+        const url = `${this.urlApi}/envio/`;
+        return this.http.post<any>(url, params);
     }
 }

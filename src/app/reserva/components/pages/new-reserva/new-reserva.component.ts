@@ -1,10 +1,11 @@
+import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, LOCALE_ID, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { HorariosService } from 'src/app/reserva/service/Horarios.service';
 import { DependenciaService } from 'src/app/reserva/service/dependencia.service';
 import { InsumosService } from 'src/app/reserva/service/insumos.service';
-import { MailService } from 'src/app/reserva/service/mail.service';
+import { EnvioMailService } from 'src/app/reserva/service/mail.service';
 import { ParametroDetalleService } from 'src/app/reserva/service/parametroDetalle.service';
 import { ReservaService } from 'src/app/reserva/service/reserva.service';
 import { ReservaHorariosService } from 'src/app/reserva/service/reservaHorarios.service';
@@ -61,7 +62,13 @@ export class NewResevaComponent implements OnInit {
   horariosUtilizados: any[] = [];
   horaOcupada: string[] = [];
   users: any[] = [];
+  insumosUser: any[] = [];
 
+  optionsMail = {
+      asunto: 'Prueba desde Angular',
+      mail: 'ju.soto.sanchez@gmail.com',
+      mensaje: 'Mensaje de prueba desde angular al crear una reserva'
+  }
   
   constructor(
     private parametroDetalle: ParametroDetalleService,
@@ -75,6 +82,8 @@ export class NewResevaComponent implements OnInit {
     private reservaHorariosService: ReservaHorariosService,
     private horariosService: HorariosService,
     private userService: UserService,
+    private envioMailService: EnvioMailService,
+    private htpclien: HttpClient
   ) { }
 
   ngOnInit() {
@@ -277,13 +286,13 @@ export class NewResevaComponent implements OnInit {
               });
         });
     }else{
-        console.log('No se encontraron dependencias');
+        //console.log('No se encontraron dependencias');
         // Eliminar la propiedad 'seleccionado' de todos los elementos
         this.limpiarGrupoFechas();
         this.horasSeleccionadas = [];
       }
     } else {
-        console.log('No se encontraron objetos con la fecha buscada.');
+        //console.log('No se encontraron objetos con la fecha buscada.');
         this.limpiarGrupoFechas();
         this.horasSeleccionadas = [];
     }
@@ -313,11 +322,29 @@ export class NewResevaComponent implements OnInit {
         this.horasSeleccionadas = this.horasSeleccionadas.filter(item => item !== hora);
     }
   }
-  
+  getInsumosByIdUser(InsumoId?: string){
+    this.insumos.getInsumoByIdUser(InsumoId).subscribe(
+      (insumosutilizados: any[]) => {
+        this.insumosUser = insumosutilizados;
+        //console.log("insumos user: ", this.insumosUser);
+      },
+      error => {
+        console.error('Error al obtener los horarios utilizados:', error);
+      }
+    );
+  }
   saveReserva() {
     this.mostrarContenido = false; // Oculta el contenido de la página
     this.guardandoReserva = true; // Muestra la barra de carga
     // Recolecta los datos de la reserva desde las variables del componente
+
+    const reservaInsumos2 = this.selectedItems.map(insumo => {
+      const insumosByUser = this.getInsumosByIdUser(insumo.code);
+      return insumosByUser
+    });
+
+    console.log("reservaInsumos2: ", reservaInsumos2);
+    return;
     const datosReserva = {
       NombreReserva: this.nombreReserva,
       NPersonas: this.numeroPersonas,
@@ -339,7 +366,7 @@ export class NewResevaComponent implements OnInit {
             InsumoId: insumo.code
           };
         });
-        console.log("Horas seleccionadas: ",this.horasSeleccionadas);
+        //console.log("Horas seleccionadas: ",this.horasSeleccionadas);
         const reservaHorarios = this.horasSeleccionadas.map(horario => {
           return {
             ReservaId: reservaId[""],
@@ -363,6 +390,7 @@ export class NewResevaComponent implements OnInit {
           () => {
             this.guardandoReserva = false; // Oculta la barra de carga después de guardar
             this.mostrarContenido = true; // Muestra el contenido de la página nuevamente
+            this.envioMail(); //envio de mail generico por ahora
           },
           error => {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un error al momento de procesar los horarios. Contactese con el administrador.', life: 3000 });
@@ -396,5 +424,11 @@ export class NewResevaComponent implements OnInit {
     });
     this.horasSeleccionadas = [];
     //console.log("horas seleccionadas post: ", this.horasSeleccionadas);
+  }
+
+  envioMail (){
+    this.envioMailService.sendMail(this.optionsMail).subscribe(resp =>{
+      //console.log(resp);
+    });
   }
 }
