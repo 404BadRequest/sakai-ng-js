@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, LOCALE_ID, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
+import { forkJoin } from 'rxjs';
 import { HorariosService } from 'src/app/reserva/service/Horarios.service';
 import { DependenciaService } from 'src/app/reserva/service/dependencia.service';
 import { InsumosService } from 'src/app/reserva/service/insumos.service';
@@ -63,12 +64,14 @@ export class NewResevaComponent implements OnInit {
   horaOcupada: string[] = [];
   users: any[] = [];
   insumosUser: any[] = [];
+  reservaEnvioMail: any[];
 
   optionsMail = {
-      asunto: 'Prueba desde Angular',
+      asunto: 'Correo electrónico fallido',
       mail: 'ju.soto.sanchez@gmail.com',
-      mensaje: 'Mensaje de prueba desde angular al crear una reserva'
+      mensaje: 'Hubo un error al cambiar las opciones de los mails'
   }
+  
   
   constructor(
     private parametroDetalle: ParametroDetalleService,
@@ -326,25 +329,76 @@ export class NewResevaComponent implements OnInit {
     this.insumos.getInsumoByIdUser(InsumoId).subscribe(
       (insumosutilizados: any[]) => {
         this.insumosUser = insumosutilizados;
-        //console.log("insumos user: ", this.insumosUser);
+        console.log("insumos user: ", this.insumosUser);
       },
       error => {
         console.error('Error al obtener los horarios utilizados:', error);
       }
     );
   }
+  procesarReservaInsumos(reservaInsumos2: any[], reservaId: string) {
+    const userIds = new Set();
+    //se deja arreglo en una dimensión
+    const arregloUnaDimension = reservaInsumos2.flat();
+    //console.log("arreglo una dimensión : ",arregloUnaDimension); 
+    const registrosUnicos = arregloUnaDimension.filter(registro => {
+      if (!userIds.has(registro.userId)) {
+        userIds.add(registro.userId);
+        return true;
+      }
+      return false;
+    });
+    let datosReservaEnvioMail: any; 
+    
+    this.reservaService.getReservaById(reservaId).subscribe(
+      (reserva: any[]) => {
+        datosReservaEnvioMail = reserva;
+        this.procesarReservaEnvioMail(datosReservaEnvioMail, registrosUnicos);
+      },
+      error => {
+        console.error('Error al obtener reserva por ID:', error);
+      }
+    );
+  }
+
+  procesarReservaEnvioMail(datosReservaEnvioMail, registrosUnicos){
+    
+    const link = "http://localhost:4200/#/pages/detail-reserva/"+datosReservaEnvioMail.Id;
+    //correo a dueños de insumos
+    registrosUnicos.forEach(envioMails => {
+      
+      const mensaje=  "Estimado "+envioMails.Nombres+" "+envioMails.Apellidos+"\n"+
+      "Junto con saludar, se informa la creación de la solicitud N°: "+ datosReservaEnvioMail.Id+ " con el nombre: '"+datosReservaEnvioMail.NombreReserva+"'\n"+
+      "Para obtener más detalle por favor presione el siguiente enlace: "+ link+"\n"+
+      "Atentamente \n "+
+      "Sistema de reserva de espacios";
+      
+      this.optionsMail = {
+        asunto: 'Nueva reserva para participar - N°: '+ datosReservaEnvioMail.Id,
+        mail: envioMails.Email,
+        mensaje: mensaje
+      }
+      this.envioMail();
+    });
+
+    //se envia correo a creador de la reserva
+    const mensaje=  "Estimado "+this.users['Nombres']+" "+this.users['Apellidos']+"\n"+
+    "Junto con saludar, se informa la creación de la solicitud N°: "+ datosReservaEnvioMail.Id+ " con el nombre: '"+datosReservaEnvioMail.NombreReserva+"'\n"+
+    "Para obtener más detalle por favor presione el siguiente enlace: "+ link+"\n"+
+    "Atentamente \n "+
+    "Sistema de reserva de espacios";
+    
+    this.optionsMail = {
+      asunto: 'Nueva reserva - N°: '+ datosReservaEnvioMail.Id,
+      mail: this.users['Email'],
+      mensaje: mensaje
+    }
+    this.envioMail();
+  }
   saveReserva() {
     this.mostrarContenido = false; // Oculta el contenido de la página
     this.guardandoReserva = true; // Muestra la barra de carga
-    // Recolecta los datos de la reserva desde las variables del componente
-
-    const reservaInsumos2 = this.selectedItems.map(insumo => {
-      const insumosByUser = this.getInsumosByIdUser(insumo.code);
-      return insumosByUser
-    });
-
-    console.log("reservaInsumos2: ", reservaInsumos2);
-    return;
+    
     const datosReserva = {
       NombreReserva: this.nombreReserva,
       NPersonas: this.numeroPersonas,
@@ -390,7 +444,22 @@ export class NewResevaComponent implements OnInit {
           () => {
             this.guardandoReserva = false; // Oculta la barra de carga después de guardar
             this.mostrarContenido = true; // Muestra el contenido de la página nuevamente
-            this.envioMail(); //envio de mail generico por ahora
+            
+            //información para los dueños de los insumos asociados a la reserva:
+            const observables = this.selectedItems.map(insumo => {
+              return this.insumos.getInsumoByIdUser(insumo.code);
+            });
+            let reservaInsumos2: any[];
+            forkJoin(observables).subscribe(
+              (results: any[]) => {
+                reservaInsumos2 = results;
+                console.log(results);
+                this.procesarReservaInsumos(reservaInsumos2,reservaId[""]);
+              },
+              error => {
+                console.error('Error al obtener los insumos:', error);
+              }
+            );
           },
           error => {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un error al momento de procesar los horarios. Contactese con el administrador.', life: 3000 });
