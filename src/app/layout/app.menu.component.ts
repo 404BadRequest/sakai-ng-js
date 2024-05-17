@@ -23,7 +23,7 @@ export class AppMenuComponent implements OnInit {
         
         if(sessionUser != null) this.visible=true;
 
-        this.getUserByAzureId(sessionUser.azureId);
+        if(sessionUser!= null )this.getUserByAzureId(sessionUser.azureId);
 
         this.model = [
             {

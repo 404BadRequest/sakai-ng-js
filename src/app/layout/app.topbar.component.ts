@@ -6,6 +6,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from "./service/app.layout.service";
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 const GRAPH_ENDPOINT = 'https://graph.microsoft.com/v1.0/me';
 
@@ -43,7 +44,8 @@ export class AppTopBarComponent implements OnInit{
         private authService: MsalService,
         private msalBroadcastService: MsalBroadcastService,
         public layoutService: LayoutService,
-        private http: HttpClient
+        private http: HttpClient,
+        private router: Router
     ) { }
 
     ngOnInit(): void {
@@ -112,6 +114,10 @@ export class AppTopBarComponent implements OnInit{
             this.profile = profile;
             this.userProfile = this.profile.userPrincipalName;
             localStorage.setItem('sessionUser', JSON.stringify({ azureId: this.profile.id, userPrincipalName: this.profile.userPrincipalName}));
+            if(!this.router.url.includes('/dashboard')){
+              this.router.navigate(['/dashboard']);
+              window.location.reload();
+            }
           });
       }
     load(index: number) {

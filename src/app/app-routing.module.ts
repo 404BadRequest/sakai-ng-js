@@ -4,6 +4,7 @@ import { NotfoundComponent } from './reserva/components/notfound/notfound.compon
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { MsalGuard } from '@azure/msal-angular';
 
+
 @NgModule({
     imports: [
         RouterModule.forRoot([
