@@ -14,7 +14,18 @@ export class ReservaService {
         const url = `${this.urlApi}/reservas/`;
         return this.http.get<any>(url);
     }
-
+    getReservasCount(): Observable<any>{
+        const url = `${this.urlApi}/reservas/count`;
+        return this.http.get<any>(url);
+    }
+    getReservasCount7dias(): Observable<any>{
+        const url = `${this.urlApi}/reservas/count/dias`;
+        return this.http.get<any>(url);
+    }
+    getReservasCountMeses(): Observable<any>{
+        const url = `${this.urlApi}/reservas/meses/count`;
+        return this.http.get<any>(url);
+    }
     createNewReserva(reserva: any): Observable<any>{
         const url = `${this.urlApi}/reservas/`;
         return this.http.post<any>(url, reserva);

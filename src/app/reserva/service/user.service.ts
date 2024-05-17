@@ -15,6 +15,11 @@ export class UserService {
         return this.http.get<any>(url);
     }
 
+    getUsersCount(): Observable<any>{
+        const url = `${this.urlApi}/users/count`;
+        return this.http.get<any>(url);
+    }
+
     getUserByAzureId(AzureId: string): Observable<any>{
         const url = `${this.urlApi}/users/azureId/${AzureId}`;
         return this.http.get<any>(url);

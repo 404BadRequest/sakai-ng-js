@@ -369,12 +369,12 @@ export class NewResevaComponent implements OnInit {
       
       const mensaje=  "Estimado "+envioMails.Nombres+" "+envioMails.Apellidos+"\n"+
       "Junto con saludar, se informa la creación de la solicitud N°: "+ datosReservaEnvioMail.Id+ " con el nombre: '"+datosReservaEnvioMail.NombreReserva+"'\n"+
-      "Para obtener más detalle por favor presione el siguiente enlace: "+ link+"\n"+
-      "Atentamente \n "+
+      "Para obtener más detalle por favor presione el siguiente enlace: "+ link+"\n\n"+
+      "Atentamente \n"+
       "Sistema de reserva de espacios";
       
       this.optionsMail = {
-        asunto: 'Nueva reserva para participar - N°: '+ datosReservaEnvioMail.Id,
+        asunto: 'Nueva participación en reserva - N°: '+ datosReservaEnvioMail.Id,
         mail: envioMails.Email,
         mensaje: mensaje
       }
@@ -384,8 +384,8 @@ export class NewResevaComponent implements OnInit {
     //se envia correo a creador de la reserva
     const mensaje=  "Estimado "+this.users['Nombres']+" "+this.users['Apellidos']+"\n"+
     "Junto con saludar, se informa la creación de la solicitud N°: "+ datosReservaEnvioMail.Id+ " con el nombre: '"+datosReservaEnvioMail.NombreReserva+"'\n"+
-    "Para obtener más detalle por favor presione el siguiente enlace: "+ link+"\n"+
-    "Atentamente \n "+
+    "Para obtener más detalle por favor presione el siguiente enlace: "+ link+"\n\n"+
+    "Atentamente \n"+
     "Sistema de reserva de espacios";
     
     this.optionsMail = {
