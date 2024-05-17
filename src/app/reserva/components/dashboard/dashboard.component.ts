@@ -102,7 +102,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     initChart() {
-        console.log("graficos: ", this.countReservaMeses);
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');

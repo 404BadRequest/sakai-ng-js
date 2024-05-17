@@ -1,6 +1,7 @@
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { LayoutService } from './service/app.layout.service';
+import { UserService } from '../reserva/service/user.service';
 
 @Component({
     selector: 'app-menu',
@@ -9,187 +10,126 @@ import { LayoutService } from './service/app.layout.service';
 export class AppMenuComponent implements OnInit {
 
     model: any[] = [];
-
-    constructor(public layoutService: LayoutService) { }
+    visible: boolean = false;
+    users: any[] = [];
+    otrasReservas: boolean= false;
+    constructor(
+        public layoutService: LayoutService,
+        private userService: UserService
+    ) { }
 
     ngOnInit() {
+        const sessionUser = JSON.parse(localStorage.getItem('sessionUser'));
+        
+        if(sessionUser != null) this.visible=true;
+
+        this.getUserByAzureId(sessionUser.azureId);
+
         this.model = [
             {
                 label: 'Inicio',
                 items: [
-                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/dashboard'] }
+                    { 
+                        label: 'Dashboard', 
+                        icon: 'pi pi-fw pi-home', 
+                        routerLink: ['/dashboard'],
+                        visible: this.visible
+                     }
                 ]
             },
-            /*{
-                label: 'UI Components',
-                items: [
-                    { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
-                    { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
-                    { label: 'Float Label', icon: 'pi pi-fw pi-bookmark', routerLink: ['/uikit/floatlabel'] },
-                    { label: 'Invalid State', icon: 'pi pi-fw pi-exclamation-circle', routerLink: ['/uikit/invalidstate'] },
-                    { label: 'Button', icon: 'pi pi-fw pi-box', routerLink: ['/uikit/button'] },
-                    { label: 'Table', icon: 'pi pi-fw pi-table', routerLink: ['/uikit/table'] },
-                    { label: 'List', icon: 'pi pi-fw pi-list', routerLink: ['/uikit/list'] },
-                    { label: 'Tree', icon: 'pi pi-fw pi-share-alt', routerLink: ['/uikit/tree'] },
-                    { label: 'Panel', icon: 'pi pi-fw pi-tablet', routerLink: ['/uikit/panel'] },
-                    { label: 'Overlay', icon: 'pi pi-fw pi-clone', routerLink: ['/uikit/overlay'] },
-                    { label: 'Media', icon: 'pi pi-fw pi-image', routerLink: ['/uikit/media'] },
-                    { label: 'Menu', icon: 'pi pi-fw pi-bars', routerLink: ['/uikit/menu'], routerLinkActiveOptions: { paths: 'subset', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' } },
-                    { label: 'Message', icon: 'pi pi-fw pi-comment', routerLink: ['/uikit/message'] },
-                    { label: 'File', icon: 'pi pi-fw pi-file', routerLink: ['/uikit/file'] },
-                    { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/uikit/charts'] },
-                    { label: 'Misc', icon: 'pi pi-fw pi-circle', routerLink: ['/uikit/misc'] }
-                ]
-            },
-            {
-                label: 'Prime Blocks',
-                items: [
-                    { label: 'Free Blocks', icon: 'pi pi-fw pi-eye', routerLink: ['/blocks'], badge: 'NEW' },
-                    { label: 'All Blocks', icon: 'pi pi-fw pi-globe', url: ['https://www.primefaces.org/primeblocks-ng'], target: '_blank' },
-                ]
-            },
-            {
-                label: 'Utilities',
-                items: [
-                    { label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', routerLink: ['/utilities/icons'] },
-                    { label: 'PrimeFlex', icon: 'pi pi-fw pi-desktop', url: ['https://www.primefaces.org/primeflex/'], target: '_blank' },
-                ]
-            },*/
             {
                 label: 'Reserva',
                 icon: 'pi pi-fw pi-briefcase',
                 items: [
-                    /*{
-                        label: 'Landing',
-                        icon: 'pi pi-fw pi-globe',
-                        routerLink: ['/landing']
-                    },
-                    {
-                        label: 'Auth',
-                        icon: 'pi pi-fw pi-user',
-                        items: [
-                            {
-                                label: 'Login',
-                                icon: 'pi pi-fw pi-sign-in',
-                                routerLink: ['/auth/login']
-                            },
-                            {
-                                label: 'Error',
-                                icon: 'pi pi-fw pi-times-circle',
-                                routerLink: ['/auth/error']
-                            },
-                            {
-                                label: 'Access Denied',
-                                icon: 'pi pi-fw pi-lock',
-                                routerLink: ['/auth/access']
-                            }
-                        ]
-                    },
-                    {
-                        label: 'Crud',
-                        icon: 'pi pi-fw pi-pencil',
-                        routerLink: ['/pages/crud']
-                    },
-                    {
-                        label: 'Timeline',
-                        icon: 'pi pi-fw pi-calendar',
-                        routerLink: ['/pages/timeline']
-                    },
-                    {
-                        label: 'Not Found',
-                        icon: 'pi pi-fw pi-exclamation-circle',
-                        routerLink: ['/notfound']
-                    },*/
                     {
                         label: 'Nueva reserva',
                         icon: 'pi pi-fw pi-plus',
-                        routerLink: ['/pages/new-reserva']
+                        routerLink: ['/pages/new-reserva'],
+                        visible: this.visible
                     },
                     {
                         label: 'Mis reservas',
                         icon: 'pi pi-fw pi-folder-open',
-                        routerLink: ['/pages/mis-reservas']
+                        routerLink: ['/pages/mis-reservas'],
+                        visible: this.visible
                     },
                     {
                         label: 'Otras reservas',
                         icon: 'pi pi-fw pi-check-square',
-                        routerLink: ['/pages/mis-aprobaciones']
+                        routerLink: ['/pages/mis-aprobaciones'],
+                        visible: this.otrasReservas
                     },
                     {
                         label: 'Calendario',
                         icon: 'pi pi-fw pi-calendar',
-                        routerLink: ['/pages/calendar']
+                        routerLink: ['/pages/calendar'],
+                        visible: this.visible
                     },
                 ]
             },
-            /*{
-                label: 'Administrador',
+        ];
+    }
+
+    getUserByAzureId(azureId: string) {
+        this.userService.getUserByAzureId(azureId).subscribe(
+            (usersAzure: any[]) => {
+                this.users = usersAzure;
+                if (usersAzure['RolId'] === 1 || usersAzure['RolId'] === 3) {
+                    this.otrasReservas = true;
+                } else {
+                    this.otrasReservas = false;
+                }
+                this.actualizarMenu();
+            },
+            error => {
+                console.error('Error al obtener los usuarios por azure id:', error);
+            }
+        )
+    }
+    
+    actualizarMenu() {
+        this.model = [
+            {
+                label: 'Inicio',
                 items: [
-                    /*{
-                        label: 'Salas',
-                        icon: 'pi pi-fw pi-bookmark',
-                        routerLink: ['/pages/admin-salas']
-                    },
                     {
-                        label: 'Usuarios',
-                        icon: 'pi pi-fw pi-id-card',
-                        routerLink: ['/pages/admin-usuarios']
-                    },
-                ]
-            },*/
-            /*{
-                label: 'Hierarchy',
-                items: [
-                    {
-                        label: 'Submenu 1', icon: 'pi pi-fw pi-bookmark',
-                        items: [
-                            {
-                                label: 'Submenu 1.1', icon: 'pi pi-fw pi-bookmark',
-                                items: [
-                                    { label: 'Submenu 1.1.1', icon: 'pi pi-fw pi-bookmark' },
-                                    { label: 'Submenu 1.1.2', icon: 'pi pi-fw pi-bookmark' },
-                                    { label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-bookmark' },
-                                ]
-                            },
-                            {
-                                label: 'Submenu 1.2', icon: 'pi pi-fw pi-bookmark',
-                                items: [
-                                    { label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-bookmark' }
-                                ]
-                            },
-                        ]
-                    },
-                    {
-                        label: 'Submenu 2', icon: 'pi pi-fw pi-bookmark',
-                        items: [
-                            {
-                                label: 'Submenu 2.1', icon: 'pi pi-fw pi-bookmark',
-                                items: [
-                                    { label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-bookmark' },
-                                    { label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark' },
-                                ]
-                            },
-                            {
-                                label: 'Submenu 2.2', icon: 'pi pi-fw pi-bookmark',
-                                items: [
-                                    { label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark' },
-                                ]
-                            },
-                        ]
+                        label: 'Dashboard',
+                        icon: 'pi pi-fw pi-home',
+                        routerLink: ['/dashboard'],
+                        visible: this.visible
                     }
                 ]
             },
             {
-                label: 'Get Started',
+                label: 'Reserva',
+                icon: 'pi pi-fw pi-briefcase',
                 items: [
                     {
-                        label: 'Documentation', icon: 'pi pi-fw pi-question', routerLink: ['/documentation']
+                        label: 'Nueva reserva',
+                        icon: 'pi pi-fw pi-plus',
+                        routerLink: ['/pages/new-reserva'],
+                        visible: this.visible
                     },
                     {
-                        label: 'View Source', icon: 'pi pi-fw pi-search', url: ['https://github.com/primefaces/sakai-ng'], target: '_blank'
-                    }
+                        label: 'Mis reservas',
+                        icon: 'pi pi-fw pi-folder-open',
+                        routerLink: ['/pages/mis-reservas'],
+                        visible: this.visible
+                    },
+                    {
+                        label: 'Otras reservas',
+                        icon: 'pi pi-fw pi-check-square',
+                        routerLink: ['/pages/mis-aprobaciones'],
+                        visible: this.otrasReservas
+                    },
+                    {
+                        label: 'Calendario',
+                        icon: 'pi pi-fw pi-calendar',
+                        routerLink: ['/pages/calendar'],
+                        visible: this.visible
+                    },
                 ]
-            }*/
+            },
         ];
     }
 }

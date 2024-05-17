@@ -117,5 +117,6 @@ export class AppTopBarComponent implements OnInit{
     load(index: number) {
         this.loading[index] = true;
         setTimeout(() => this.loading[index] = false, 1000);
+        localStorage.removeItem('sessionUser');
     }
 }
