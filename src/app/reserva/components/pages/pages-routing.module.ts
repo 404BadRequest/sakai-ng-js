@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
         { path: 'mis-reservas', loadChildren: () => import('./mis-reservas/mis-reservas.module').then(m => m.MisReservasModule) },
         { path: 'mis-aprobaciones', loadChildren: () => import('./mis-aprobaciones/mis-aprobaciones.module').then(m => m.MisAprobacionesModule) },
         { path: 'detail-reserva/:Id', loadChildren: () => import('./detail-reserva/detail-reserva.module').then(m => m.DetailReservaModule) },
+        { path: 'detail-reserva-otras/:Id', loadChildren: () => import('./detail-reserva-otras/detail-reserva-otras.module').then(m => m.DetailReservaOtrasModule) },
         { path: '**', redirectTo: '/notfound' }
     ])],
     exports: [RouterModule]

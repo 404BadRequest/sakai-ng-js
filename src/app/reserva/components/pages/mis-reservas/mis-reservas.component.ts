@@ -3,6 +3,7 @@ import { ProductService } from '../../../service/product.service';
 import { Product } from '../../../api/product';
 import { ReservaService } from 'src/app/reserva/service/reserva.service';
 import { Table } from 'primeng/table';
+import { UserService } from 'src/app/reserva/service/user.service';
 
 @Component({
   templateUrl: './mis-reservas.component.html',
@@ -13,17 +14,28 @@ export class MisReservasComponent implements OnInit{
   userId : string;
   reservasByUser : any[] = [];
   cols: any[] = [];
+  users: any[] = [];
   constructor(
     private productService: ProductService,
-    private reservasService: ReservaService
+    private reservasService: ReservaService,
+    private userService : UserService
     ){
   }
   ngOnInit() {
-    this.userId = "13";
-    this.productService.getProductsSmall().then(data => this.products = data);
-    this.getReservasByUserId(this.userId);
+    const sessionUser = JSON.parse(localStorage.getItem('sessionUser'));
+    this.getUserByAzureId(sessionUser.azureId);
   }
-
+  getUserByAzureId(azureId: string){
+    this.userService.getUserByAzureId(azureId).subscribe(
+      (usersAzure: any[]) => {
+        this.users = usersAzure;
+        this.getReservasByUserId(this.users['Id']);
+      },
+      error => {
+        console.error('Error al obtener los usuarios por azure id:', error);
+      }
+    )
+  }
   getReservasByUserId(userId){
     this.reservasService.getReservaByUserId(userId).subscribe(
       (reseras: any[]) => {

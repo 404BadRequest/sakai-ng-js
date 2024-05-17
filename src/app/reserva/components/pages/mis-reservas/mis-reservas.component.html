@@ -28,7 +28,7 @@
                     <td style="width: 45%; min-width: 7rem;">{{reserva.NombreReserva}}</td>
                     <td style="width: 35%; min-width: 8rem;">{{reserva.FechaReserva | date: 'dd-MM-yyyy' }}</td>
                     <td style="width: 45%; min-width: 8rem;">{{reserva.NombreDependencia }}</td>
-                    <td style="width: 35%; min-width: 8rem;">{{reserva.Nombres }}</td>
+                    <td style="width: 35%; min-width: 8rem;">{{reserva.Nombres }} {{reserva.Apellidos }}</td>
                     <td style="width: 15%;">
                         <button pButton pRipple type="button" icon="pi pi-search" class="p-button p-component p-button-text p-button-icon-only" [routerLink]="['/pages/detail-reserva/', reserva.Id]"></button>
                     </td>
