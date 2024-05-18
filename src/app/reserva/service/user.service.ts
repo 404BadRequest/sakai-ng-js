@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class UserService {
 
-    //private urlApi = 'https://backend-reserva-node.azurewebsites.net';
-    private urlApi = 'http://localhost:4000';
+    private urlApi = 'https://backend-reserva-node.azurewebsites.net';
+    //private urlApi = 'http://localhost:4000';
 
     constructor(private http: HttpClient) { }
 

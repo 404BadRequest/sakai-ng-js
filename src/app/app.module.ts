@@ -68,7 +68,7 @@ import { EnvioMailService } from './reserva/service/mail.service';
       auth: {
         clientId: '20dea582-0e77-42d5-b802-975107d904ae',
         authority: 'https://login.microsoftonline.com/11bc7339-c6ee-4268-9071-46778e253099',
-        redirectUri: 'http://localhost:4200',
+        redirectUri: 'https://reservaespacios-5de66.web.app',
       },
       cache: {
         cacheLocation: BrowserCacheLocation.LocalStorage,
