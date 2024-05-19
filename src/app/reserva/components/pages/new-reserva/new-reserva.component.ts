@@ -363,7 +363,7 @@ export class NewResevaComponent implements OnInit {
 
   procesarReservaEnvioMail(datosReservaEnvioMail, registrosUnicos){
     
-    const link = "http://localhost:4200/#/pages/detail-reserva/"+datosReservaEnvioMail.Id;
+    const link = "https://reservaespacios-5de66.web.app/#/pages/detail-reserva/"+datosReservaEnvioMail.Id;
     //correo a dueños de insumos
     registrosUnicos.forEach(envioMails => {
       
@@ -497,7 +497,10 @@ export class NewResevaComponent implements OnInit {
 
   envioMail (){
     this.envioMailService.sendMail(this.optionsMail).subscribe(resp =>{
-      //console.log(resp);
+     console.log("Mensaje enviado"); 
+    },
+    error => {
+      console.error('Error al enviar mai: ', error);
     });
   }
 }
