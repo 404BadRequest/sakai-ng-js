@@ -363,7 +363,7 @@ export class NewResevaComponent implements OnInit {
 
   procesarReservaEnvioMail(datosReservaEnvioMail, registrosUnicos){
     
-    const link = "https://reservaespacios-5de66.web.app/#/pages/detail-reserva/"+datosReservaEnvioMail.Id;
+    const link = "https://reservaespacios-5de66.web.app/#/dashboard";
     //correo a dueños de insumos
     registrosUnicos.forEach(envioMails => {
       
