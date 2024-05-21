@@ -6,6 +6,7 @@ import { Subscription, debounceTime } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { ReservaService } from '../../service/reserva.service';
 import { UserService } from '../../service/user.service';
+import { LoadingService } from '../../service/loading.service';
 
 @Component({
     templateUrl: './dashboard.component.html',
@@ -21,12 +22,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     countReservaUltimaSemana: any[];
     usuariosActivos: any[];
     countReservaMeses: any[];
+    loading$ = this.loadingService.loading$;
 
     constructor(
         private productService: ProductService, 
         public layoutService: LayoutService,
         private reservaService: ReservaService,
-        private usuarioService: UserService
+        private usuarioService: UserService,
+        private loadingService: LoadingService,
     ) {
         this.subscription = this.layoutService.configUpdate$
         .pipe(debounceTime(25))
@@ -49,34 +52,43 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     countReservas(){
+        this.loadingService.setLoading(true);
         this.reservaService.getReservasCount().subscribe(
           (countResevas: any[]) => {
             this.countReserva = countResevas;
+            this.loadingService.setLoading(false);
           },
           error => {
             console.error('Error al obtener el count de las reservas:', error);
+            this.loadingService.setLoading(false);
           }
         );
     }
 
     countReservasUltimaSemana(){
+        this.loadingService.setLoading(true);
         this.reservaService.getReservasCount7dias().subscribe(
           (countResevasUltimaSemana: any[]) => {
             this.countReservaUltimaSemana = countResevasUltimaSemana;
+            this.loadingService.setLoading(false);
           },
           error => {
             console.error('Error al obtener el count de las reservas de la última semana:', error);
+            this.loadingService.setLoading(false);
           }
         );
     }
 
     usuariosActivosReserva(){
+        this.loadingService.setLoading(true);
         this.usuarioService.getUsersCount().subscribe(
           (countUsuarios: any[]) => {
             this.usuariosActivos = countUsuarios;
+            this.loadingService.setLoading(false);
           },
           error => {
             console.error('Error al obtener el count de los usuarios activos:', error);
+            this.loadingService.setLoading(false);
           }
         );
     }
@@ -108,7 +120,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
         
         const mesesLabels = this.countReservaMeses.map(reserva => {
-            return this.nombreMes(reserva.mes); // suponiendo que tienes una función que convierte el número de mes a su nombre
+            return this.nombreMes(reserva.mes); 
         });
 
         const totalesReservas = this.countReservaMeses.map(reserva => reserva.total_reservas);
