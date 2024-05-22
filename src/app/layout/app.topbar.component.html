@@ -15,6 +15,6 @@
     <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
         <p-chip label="Iniciar sesión" icon="pi pi-microsoft" *ngIf="!loginDisplay" (click)="login()" styleClass="m-1" class="cursor-pointer"></p-chip>
         <p-chip label="{{userProfile}}" icon="pi pi-microsoft" *ngIf="loginDisplay" styleClass="m-1"></p-chip>
-        <p-button label="Cerrar sesión" *ngIf="loginDisplay" [loading]="loading[3]" (onClick)="load(3); logout();"></p-button>
+        <p-button label="Cerrar sesión" *ngIf="loginDisplay" [loading]="loading[3]" (onClick)="load(3); logout();" class="bg-blue-100"></p-button>
     </div>
 </div>

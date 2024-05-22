@@ -12,7 +12,7 @@
   --surface-f: #ffffff;
   --text-color: #4b5563;
   --text-color-secondary: #6b7280;
-  --primary-color: #6366F1;
+  --primary-color: #046a38;
   --primary-color-text: #ffffff;
   --surface-0: #ffffff;
   --surface-50: #f9fafb;
@@ -1951,22 +1951,22 @@
 
   .p-button {
     color: #ffffff;
-    background: #6366F1;
-    border: 1px solid #6366F1;
+    background: #046a38;
+    border: 1px solid #046a38;
     padding: 0.75rem 1.25rem;
     font-size: 1rem;
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
     border-radius: 6px;
   }
   .p-button:not(:disabled):hover {
-    background: #4F46E5;
+    background: #0e8174;
     color: #ffffff;
-    border-color: #4F46E5;
+    border-color: #0e8174;
   }
   .p-button:not(:disabled):active {
-    background: #4338CA;
+    background: #0e8174;
     color: #ffffff;
-    border-color: #4338CA;
+    border-color: #0e8174;
   }
   .p-button.p-button-outlined {
     background-color: transparent;
@@ -6317,7 +6317,7 @@
   }
 
   .p-steps .p-steps-item.p-highlight .p-steps-number {
-    background: #6366F1;
+    background: #046a38;
     color: #ffffff;
   }
 }

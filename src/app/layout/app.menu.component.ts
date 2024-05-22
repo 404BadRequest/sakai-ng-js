@@ -13,7 +13,7 @@ export class AppMenuComponent implements OnInit {
     visible: boolean = false;
     users: any[] = [];
     otrasReservas: boolean= false;
-    menuReservas: boolean= true;
+    menuReservas: boolean= false;
     constructor(
         public layoutService: LayoutService,
         private userService: UserService
@@ -72,13 +72,14 @@ export class AppMenuComponent implements OnInit {
     }
 
     getUserByAzureId(azureId: string) {
-        //console.log(azureId);
+        console.log(azureId);
         this.userService.getUserByAzureId(azureId).subscribe(
             (usersAzure: any[]) => {
                 if(usersAzure!= null){
                     this.users = usersAzure;
                     if (usersAzure['RolId'] === 1 || usersAzure['RolId'] === 3) {
                         this.otrasReservas = true;
+                        this.menuReservas = true;
                     } else {
                         this.otrasReservas = false;
                     }
