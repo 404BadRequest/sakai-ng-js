@@ -1,4 +1,4 @@
-<div class="grid">
+<div *ngIf="!mensajeAdvertencia" class="grid">
     <div class="col-12 lg:col-6 xl:col-4">
         <div class="card mb-0">
             <div class="flex justify-content-between mb-3">
@@ -48,4 +48,11 @@
         </div>
     </div>
 </div>
-
+<div *ngIf="mensajeAdvertencia" class="grid">
+    <div class="col-12">
+        <p-card header="">
+            <h4>Sistema de reserva de espacios para el Colegio del Verbo Divino</h4>
+            <h5>Usuario no se encuentra registrado en la base de datos. Por favor contactese con el administrador!</h5>
+        </p-card>
+    </div>
+</div>

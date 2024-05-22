@@ -13,6 +13,7 @@ export class AppMenuComponent implements OnInit {
     visible: boolean = false;
     users: any[] = [];
     otrasReservas: boolean= false;
+    menuReservas: boolean= true;
     constructor(
         public layoutService: LayoutService,
         private userService: UserService
@@ -23,7 +24,7 @@ export class AppMenuComponent implements OnInit {
         
         if(sessionUser != null) this.visible=true;
 
-        if(sessionUser!= null )this.getUserByAzureId(sessionUser.azureId);
+        if(sessionUser!= null ) this.getUserByAzureId(sessionUser.azureId);
 
         this.model = [
             {
@@ -33,7 +34,7 @@ export class AppMenuComponent implements OnInit {
                         label: 'Dashboard', 
                         icon: 'pi pi-fw pi-home', 
                         routerLink: ['/dashboard'],
-                        visible: this.visible
+                        visible: this.menuReservas
                      }
                 ]
             },
@@ -45,13 +46,13 @@ export class AppMenuComponent implements OnInit {
                         label: 'Nueva reserva',
                         icon: 'pi pi-fw pi-plus',
                         routerLink: ['/pages/new-reserva'],
-                        visible: this.visible
+                        visible: this.menuReservas
                     },
                     {
                         label: 'Mis reservas',
                         icon: 'pi pi-fw pi-folder-open',
                         routerLink: ['/pages/mis-reservas'],
-                        visible: this.visible
+                        visible: this.menuReservas
                     },
                     {
                         label: 'Otras reservas',
@@ -63,7 +64,7 @@ export class AppMenuComponent implements OnInit {
                         label: 'Calendario',
                         icon: 'pi pi-fw pi-calendar',
                         routerLink: ['/pages/calendar'],
-                        visible: this.visible
+                        visible: this.menuReservas
                     },
                 ]
             },
@@ -71,15 +72,22 @@ export class AppMenuComponent implements OnInit {
     }
 
     getUserByAzureId(azureId: string) {
+        //console.log(azureId);
         this.userService.getUserByAzureId(azureId).subscribe(
             (usersAzure: any[]) => {
-                this.users = usersAzure;
-                if (usersAzure['RolId'] === 1 || usersAzure['RolId'] === 3) {
-                    this.otrasReservas = true;
-                } else {
-                    this.otrasReservas = false;
+                if(usersAzure!= null){
+                    this.users = usersAzure;
+                    if (usersAzure['RolId'] === 1 || usersAzure['RolId'] === 3) {
+                        this.otrasReservas = true;
+                    } else {
+                        this.otrasReservas = false;
+                    }
+                    this.actualizarMenu();
+                }else{
+                    this.users = null;
+                    this.menuReservas = false;
+                    this.actualizarMenu();
                 }
-                this.actualizarMenu();
             },
             error => {
                 console.error('Error al obtener los usuarios por azure id:', error);
@@ -96,7 +104,7 @@ export class AppMenuComponent implements OnInit {
                         label: 'Dashboard',
                         icon: 'pi pi-fw pi-home',
                         routerLink: ['/dashboard'],
-                        visible: this.visible
+                        visible: this.menuReservas
                     }
                 ]
             },
@@ -108,13 +116,13 @@ export class AppMenuComponent implements OnInit {
                         label: 'Nueva reserva',
                         icon: 'pi pi-fw pi-plus',
                         routerLink: ['/pages/new-reserva'],
-                        visible: this.visible
+                        visible: this.menuReservas
                     },
                     {
                         label: 'Mis reservas',
                         icon: 'pi pi-fw pi-folder-open',
                         routerLink: ['/pages/mis-reservas'],
-                        visible: this.visible
+                        visible: this.menuReservas
                     },
                     {
                         label: 'Otras reservas',
@@ -126,7 +134,7 @@ export class AppMenuComponent implements OnInit {
                         label: 'Calendario',
                         icon: 'pi pi-fw pi-calendar',
                         routerLink: ['/pages/calendar'],
-                        visible: this.visible
+                        visible: this.menuReservas
                     },
                 ]
             },

@@ -14,7 +14,8 @@ type ProfileType = {
   givenName?: string,
   surname?: string,
   userPrincipalName?: string,
-  id?: string
+  id?: string,
+  displayName?: string
 }
 
 @Component({
@@ -49,6 +50,7 @@ export class AppTopBarComponent implements OnInit{
     ) { }
 
     ngOnInit(): void {
+      
         this.isIframe = window !== window.parent && !window.opener;
     
         this.msalBroadcastService.inProgress$
@@ -112,7 +114,7 @@ export class AppTopBarComponent implements OnInit{
         this.http.get(GRAPH_ENDPOINT)
           .subscribe(profile => {
             this.profile = profile;
-            this.userProfile = this.profile.givenName;
+            this.userProfile = this.profile.displayName;
             localStorage.setItem('sessionUser', JSON.stringify({ azureId: this.profile.id, userPrincipalName: this.profile.userPrincipalName}));
             if(!this.router.url.includes('/dashboard')){
               this.router.navigate(['/dashboard']);

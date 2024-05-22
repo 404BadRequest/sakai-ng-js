@@ -1,3 +1,4 @@
+// dashboard.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Product } from '../../api/product';
@@ -12,6 +13,7 @@ import { LoadingService } from '../../service/loading.service';
     templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+    [x: string]: any;
 
     items!: MenuItem[];
     products!: Product[];
@@ -24,15 +26,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
     countReservaMeses: any[];
     loading$ = this.loadingService.loading$;
 
+    mensajeAdvertencia: boolean = false;
+
     constructor(
         private productService: ProductService, 
         public layoutService: LayoutService,
         private reservaService: ReservaService,
         private usuarioService: UserService,
         private loadingService: LoadingService,
+        private userService: UserService
     ) {
         this.subscription = this.layoutService.configUpdate$
-        .pipe(debounceTime(25))
+        .pipe(debounceTime(0))
         .subscribe((config) => {
             this.initChart();
         });
@@ -43,7 +48,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.countReservasUltimaSemana();
         this.usuariosActivosReserva();
         this.getReservasMeses();
-        this.productService.getProductsSmall().then(data => this.products = data);
+        const sessionUser = JSON.parse(localStorage.getItem('sessionUser'));
+        
+        if(sessionUser!= null ) this.getUserByAzureId(sessionUser.azureId);
 
         this.items = [
             { label: 'Add New', icon: 'pi pi-fw pi-plus' },
@@ -51,66 +58,83 @@ export class DashboardComponent implements OnInit, OnDestroy {
         ];
     }
 
+    getUserByAzureId(azureId: string) {
+        //console.log(azureId);
+        this.userService.getUserByAzureId(azureId).subscribe(
+            (usersAzure: any[]) => {
+                if(usersAzure!= null){
+                    this.mensajeAdvertencia = false;
+                }else{
+                    this.mensajeAdvertencia = true;
+                }
+            },
+            error => {
+                console.error('Error al obtener los usuarios por azure id:', error);
+            }
+        )
+    }
+
     countReservas(){
         this.loadingService.setLoading(true);
         this.reservaService.getReservasCount().subscribe(
-          (countResevas: any[]) => {
+        (countResevas: any[]) => {
             this.countReserva = countResevas;
             this.loadingService.setLoading(false);
-          },
-          error => {
+        },
+        error => {
             console.error('Error al obtener el count de las reservas:', error);
             this.loadingService.setLoading(false);
-          }
+        }
         );
     }
 
     countReservasUltimaSemana(){
         this.loadingService.setLoading(true);
         this.reservaService.getReservasCount7dias().subscribe(
-          (countResevasUltimaSemana: any[]) => {
+        (countResevasUltimaSemana: any[]) => {
             this.countReservaUltimaSemana = countResevasUltimaSemana;
             this.loadingService.setLoading(false);
-          },
-          error => {
+        },
+        error => {
             console.error('Error al obtener el count de las reservas de la última semana:', error);
             this.loadingService.setLoading(false);
-          }
+        }
         );
     }
 
     usuariosActivosReserva(){
         this.loadingService.setLoading(true);
         this.usuarioService.getUsersCount().subscribe(
-          (countUsuarios: any[]) => {
+        (countUsuarios: any[]) => {
             this.usuariosActivos = countUsuarios;
             this.loadingService.setLoading(false);
-          },
-          error => {
+        },
+        error => {
             console.error('Error al obtener el count de los usuarios activos:', error);
             this.loadingService.setLoading(false);
-          }
+        }
         );
     }
+
     getReservasMeses(){
         this.reservaService.getReservasCountMeses().subscribe(
             (countResevasMeses: any[]) => {
-              // Crear un arreglo con todos los meses del año
-              const todosLosMeses = Array.from({ length: 12 }, (_, i) => i + 1);
-      
-              // Iterar sobre cada mes y verificar si está en el arreglo original
-              const reservasConTodosLosMeses = todosLosMeses.map(mes => {
+            // Crear un arreglo con todos los meses del año
+            const todosLosMeses = Array.from({ length: 12 }, (_, i) => i + 1);
+    
+            // Iterar sobre cada mes y verificar si está en el arreglo original
+            const reservasConTodosLosMeses = todosLosMeses.map(mes => {
                 const reserva = countResevasMeses.find(r => r.mes === mes);
                 return reserva || { año: new Date().getFullYear(), mes, total_reservas: 0 };
-              });
-              // Ordenar el arreglo por mes
-              this.countReservaMeses = reservasConTodosLosMeses.sort((a, b) => a.mes - b.mes);
-              this.initChart();
+            });
+            // Ordenar el arreglo por mes
+            this.countReservaMeses = reservasConTodosLosMeses.sort((a, b) => a.mes - b.mes);
+            this.initChart();
             },
             error => {
-              console.error('Error al obtener el count de las reservas de los meses:', error);
+            console.error('Error al obtener el count de las reservas de los meses:', error);
             }
-          );
+        );
     }
 
     initChart() {
@@ -188,10 +212,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
         ];
     
-        // Restar 1 al número del mes para obtener el índice correcto en el array
         const indiceMes = numeroMes - 1;
     
-        // Verificar si el índice del mes está dentro del rango del array
         if (indiceMes >= 0 && indiceMes < meses.length) {
             return meses[indiceMes];
         } else {
