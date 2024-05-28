@@ -82,6 +82,7 @@ export class AppMenuComponent implements OnInit {
                         this.menuReservas = true;
                     } else {
                         this.otrasReservas = false;
+                        this.menuReservas = true;
                     }
                     this.actualizarMenu();
                 }else{

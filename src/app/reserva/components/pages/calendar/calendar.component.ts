@@ -125,6 +125,7 @@ export class CalendarComponent implements OnInit{
     this.calendarEvents = horariosFiltrados.map(horario => {
       const fechaSeleccionada = new Date(horario.FechaReserva);
       const fechaFormateada = this.formatDate(fechaSeleccionada);
+      
       return {
         idReserva: horario.IdReserva,
         title: horario.NombreReserva, 
@@ -132,7 +133,8 @@ export class CalendarComponent implements OnInit{
         start: fechaFormateada + "T" + horario.HoraSeleccionada, 
         end: '',
         color: horario.ColorDependencia,
-        insumosDependencia: horario.InsumosConcatenadosName // Inicializar como un arreglo vacío
+        insumosDependencia: horario.InsumosConcatenadosName,
+        nombreSolicitante: horario.NombreSolicitante
       };
     })
   }
@@ -196,6 +198,7 @@ export class CalendarComponent implements OnInit{
     const start = clickInfo.event.start;
     const end = clickInfo.event.end;
     const insumosDependencia = clickInfo.event.extendedProps.insumosDependencia;
+    const nombreSolicitante = clickInfo.event.extendedProps.nombreSolicitante;
     //console.log("click info: ", insumosDependencia);
   
     this.eventDetails = {
@@ -204,7 +207,8 @@ export class CalendarComponent implements OnInit{
       dependencia,
       start,
       end,
-      insumosDependencia
+      insumosDependencia,
+      nombreSolicitante
     };
     this.infoUserDialog = true;
   }

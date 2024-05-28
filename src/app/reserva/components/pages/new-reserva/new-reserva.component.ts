@@ -367,7 +367,7 @@ export class NewResevaComponent implements OnInit {
     //correo a dueños de insumos
     registrosUnicos.forEach(envioMails => {
       
-      const mensaje=  "Estimado "+envioMails.Nombres+" "+envioMails.Apellidos+"\n"+
+      const mensaje=  "Estimado "+envioMails.Nombres+"\n"+
       "Junto con saludar, se informa la creación de la solicitud N°: "+ datosReservaEnvioMail.Id+ " con el nombre: '"+datosReservaEnvioMail.NombreReserva+"'\n"+
       "Para obtener más detalle por favor presione el siguiente enlace: "+ link+"\n\n"+
       "Atentamente \n"+
@@ -382,7 +382,7 @@ export class NewResevaComponent implements OnInit {
     });
 
     //se envia correo a creador de la reserva
-    const mensaje=  "Estimado "+this.users['Nombres']+" "+this.users['Apellidos']+"\n"+
+    const mensaje=  "Estimado "+this.users['Nombres']+"\n"+
     "Junto con saludar, se informa la creación de la solicitud N°: "+ datosReservaEnvioMail.Id+ " con el nombre: '"+datosReservaEnvioMail.NombreReserva+"'\n"+
     "Para obtener más detalle por favor presione el siguiente enlace: "+ link+"\n\n"+
     "Atentamente \n"+
