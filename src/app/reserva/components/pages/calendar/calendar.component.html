@@ -6,7 +6,6 @@
               <div class="p-formgrid grid">
                 <div class="field col">
                   <label htmlFor="name2">Dependencias</label>
-                  <!--<p-dropdown [options]="cities" [(ngModel)]="selectedDrop" placeholder="Select a City" [showClear]="true"></p-dropdown>-->
                   <p-dropdown  
                     [options]="dependencias" 
                     (onChange)="onChangeFiltroDependencias($event.value)" 
@@ -14,10 +13,6 @@
                     (onClear)="onClearDropdown()"
                     [showClear]="true"
                     ></p-dropdown>
-                  <!--<select [(ngModel)]="filtroDependencias" (change)="onChangeFiltroDependencias()">
-                    <option value="todos">Todos las reservas</option>
-                    <option value="reservas">Más reservas</option>
-                  </select>-->
                 </div>
                 <div class="field col">
                   <label htmlFor="email2">Insumos</label>
@@ -29,10 +24,6 @@
                     [showClear]="true"
                     >
                   </p-dropdown>
-                  <!--<select [(ngModel)]="filtroInsumos" (change)="onChangeFiltroInsumos()">
-                    <option value="todos">Todos los insumos</option>
-                    <option value="reservas">Más reservas</option>
-                  </select>-->
                 </div>
               </div>
             </div>
@@ -57,7 +48,7 @@
               <p>Insumos dependencia:<b> {{ eventDetails?.insumosDependencia }}</b></p>
             </div>
             <div class="p-col">
-              <p>Fecha y hora seleccionada:<b> {{ eventDetails?.start | date: 'yyyy-MM-dd HH:mm:ss'}}</b></p>
+              <p>Horas seleccionadas:<b> {{ eventDetails?.HorasSeleccionadas.join('; ') }}</b></p>
             </div>
             <div class="p-col">
               <p>Solicitante:<b> {{ eventDetails?.nombreSolicitante }}</b></p>

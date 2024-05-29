@@ -116,28 +116,62 @@ export class CalendarComponent implements OnInit{
   mapHorariosToEvents(dependenciaId?: string, insumoid?: string) {
     let horariosFiltrados = this.horariosUtilizados;
     if (dependenciaId) {
-      horariosFiltrados = this.horariosUtilizados.filter(horario => horario.DependenciaId === dependenciaId);
+        horariosFiltrados = horariosFiltrados.filter(horario => horario.DependenciaId === dependenciaId);
     }
     if (insumoid) {
-      horariosFiltrados = this.horariosUtilizados.filter(horario => horario.InsumosConcatenados.includes(insumoid));
+        horariosFiltrados = horariosFiltrados.filter(horario => horario.InsumosConcatenados.includes(insumoid));
     }
-  
-    this.calendarEvents = horariosFiltrados.map(horario => {
-      const fechaSeleccionada = new Date(horario.FechaReserva);
-      const fechaFormateada = this.formatDate(fechaSeleccionada);
-      
-      return {
-        idReserva: horario.IdReserva,
-        title: horario.NombreReserva, 
-        dependencia: horario.NombreDependencia,
-        start: fechaFormateada + "T" + horario.HoraSeleccionada, 
-        end: '',
-        color: horario.ColorDependencia,
-        insumosDependencia: horario.InsumosConcatenadosName,
-        nombreSolicitante: horario.NombreSolicitante
-      };
-    })
+
+    // Agrupar horarios por IdReserva
+    const horariosAgrupados = horariosFiltrados.reduce((acc: { [key: number]: any[] }, horario) => {
+        if (!acc[horario.IdReserva]) {
+            acc[horario.IdReserva] = [];
+        }
+        acc[horario.IdReserva].push(horario);
+        return acc;
+    }, {});
+
+    // Convertir horas a minutos
+    const timeToMinutes = (time: string) => {
+        const [hours, minutes] = time.split(':').map(Number);
+        return hours * 60 + minutes;
+    };
+
+    // Convertir minutos a horas
+    const minutesToTime = (minutes: number) => {
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
+    };
+
+    // Crear eventos fusionados
+    this.calendarEvents = Object.values(horariosAgrupados).map((grupo: any[]) => {
+        const horas = grupo.map(horario => timeToMinutes(horario.HoraSeleccionada));
+        const HoraSeleccionadaInicio = minutesToTime(Math.min(...horas));
+        const HoraSeleccionadaFin = minutesToTime(Math.max(...horas) + 30); // adding 30 minutes to the last hour to get the correct end time
+        
+        const HorasSeleccionadas = grupo.map(horario => horario.HoraSeleccionada);
+        
+        const horario = grupo[0];
+        const fechaSeleccionada = new Date(horario.FechaReserva);
+        const fechaFormateada = this.formatDate(fechaSeleccionada);
+
+        return {
+            idReserva: horario.IdReserva,
+            title: horario.NombreReserva + " - " + horario.NombreSolicitante,
+            dependencia: horario.NombreDependencia,
+            start: fechaFormateada + "T" + HoraSeleccionadaInicio,
+            end: fechaFormateada + "T" + HoraSeleccionadaFin,
+            color: horario.ColorDependencia,
+            insumosDependencia: horario.InsumosConcatenadosName,
+            nombreSolicitante: horario.NombreSolicitante,
+            HorasSeleccionadas: HorasSeleccionadas
+        };
+    });
   }
+
+
+  
 
   calendarOptions = {
     plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
@@ -154,10 +188,6 @@ export class CalendarComponent implements OnInit{
         type: 'dayGridMonth',
         buttonText: 'Mes'
       },
-      timeGridWeek: { // Vista de semana
-        type: 'timeGridWeek',
-        buttonText: 'Semana'
-      },
       listMonth: { // Vista de lista por mes
         type: 'listMonth',
         buttonText: 'Lista (Mes)'
@@ -166,7 +196,7 @@ export class CalendarComponent implements OnInit{
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,listMonth'
+      right: 'dayGridMonth,listMonth'
     },
   }
 
@@ -199,6 +229,7 @@ export class CalendarComponent implements OnInit{
     const end = clickInfo.event.end;
     const insumosDependencia = clickInfo.event.extendedProps.insumosDependencia;
     const nombreSolicitante = clickInfo.event.extendedProps.nombreSolicitante;
+    const HorasSeleccionadas = clickInfo.event.extendedProps.HorasSeleccionadas;
     //console.log("click info: ", insumosDependencia);
   
     this.eventDetails = {
@@ -208,7 +239,8 @@ export class CalendarComponent implements OnInit{
       start,
       end,
       insumosDependencia,
-      nombreSolicitante
+      nombreSolicitante,
+      HorasSeleccionadas
     };
     this.infoUserDialog = true;
   }
