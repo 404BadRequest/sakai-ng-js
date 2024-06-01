@@ -161,11 +161,14 @@ export class CalendarComponent implements OnInit{
             title: horario.NombreReserva + " - " + horario.NombreSolicitante,
             dependencia: horario.NombreDependencia,
             start: fechaFormateada + "T" + HoraSeleccionadaInicio,
-            end: fechaFormateada + "T" + HoraSeleccionadaFin,
+            end: "",
             color: horario.ColorDependencia,
             insumosDependencia: horario.InsumosConcatenadosName,
             nombreSolicitante: horario.NombreSolicitante,
-            HorasSeleccionadas: HorasSeleccionadas
+            HorasSeleccionadas: HorasSeleccionadas,
+            NPersonas: horario.NPersonas,
+            comentarios: horario.Comentario,
+            fechaCreacion: horario.FechaCreacion
         };
     });
   }
@@ -230,6 +233,9 @@ export class CalendarComponent implements OnInit{
     const insumosDependencia = clickInfo.event.extendedProps.insumosDependencia;
     const nombreSolicitante = clickInfo.event.extendedProps.nombreSolicitante;
     const HorasSeleccionadas = clickInfo.event.extendedProps.HorasSeleccionadas;
+    const NPersonas = clickInfo.event.extendedProps.NPersonas;
+    const comentarios = clickInfo.event.extendedProps.comentarios;
+    const fechaCreacion = clickInfo.event.extendedProps.fechaCreacion;
     //console.log("click info: ", insumosDependencia);
   
     this.eventDetails = {
@@ -240,7 +246,10 @@ export class CalendarComponent implements OnInit{
       end,
       insumosDependencia,
       nombreSolicitante,
-      HorasSeleccionadas
+      HorasSeleccionadas,
+      NPersonas,
+      comentarios,
+      fechaCreacion
     };
     this.infoUserDialog = true;
   }

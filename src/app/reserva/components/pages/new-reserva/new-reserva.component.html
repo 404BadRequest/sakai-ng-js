@@ -94,10 +94,10 @@
                                                     <!--<button pButton type="button" icon="pi pi-check" class="small-button" [ngClass]="{'p-button-success': hora.seleccionado}" (click)="toggleHoraSeleccionada(hora)"></button>-->
                                                     <button pButton 
                                                         type="button" 
-                                                        [icon]="hora.seleccionado ? 'pi pi-times' : 'pi pi-circle'" 
+                                                        [icon]="hora.seleccionado ? 'pi pi-check' : 'pi pi-circle'" 
                                                         class="small-button" 
                                                         [disabled]="hora.seleccionado"
-                                                        [ngClass]="{'p-button-danger': hora.seleccionado, 'p-button-secondary': !hora.seleccionado}" 
+                                                        [ngClass]="{'p-button-primary': hora.seleccionado, 'p-button-secondary': !hora.seleccionado}" 
                                                         (click)="toggleHoraSeleccionada(hora)">
                                                     </button>
                                                 </td>

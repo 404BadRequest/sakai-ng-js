@@ -7,6 +7,7 @@ import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
     imports: [
@@ -17,6 +18,7 @@ import { DropdownModule } from 'primeng/dropdown';
         FormsModule,
         MultiSelectModule,
         DropdownModule,
+        TableModule
     ],
     declarations: [CalendarComponent]
 })

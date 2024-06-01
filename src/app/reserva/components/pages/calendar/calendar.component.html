@@ -33,26 +33,48 @@
                 ></full-calendar>
         </div>
     </div>
-    <p-dialog [(visible)]="infoUserDialog" header="Detalle de la reserva" [modal]="true" [style]="{width:'450px'}">
-        <div class="p-grid p-dir-col">
-          <div class="p-col">
-            <p>Id Reserva:<b> {{ eventDetails?.idReserva }}</b></p>
-          </div>
-            <div class="p-col">
-              <p>Nombre reserva:<b> {{ eventDetails?.title }}</b></p>
-            </div>
-            <div class="p-col">
-              <p>Nombre dependencia:<b> {{ eventDetails?.dependencia }}</b></p>
-            </div>
-            <div class="p-col">
-              <p>Insumos dependencia:<b> {{ eventDetails?.insumosDependencia }}</b></p>
-            </div>
-            <div class="p-col">
-              <p>Horas seleccionadas:<b> {{ eventDetails?.HorasSeleccionadas.join('; ') }}</b></p>
-            </div>
-            <div class="p-col">
-              <p>Solicitante:<b> {{ eventDetails?.nombreSolicitante }}</b></p>
-            </div>
-          </div>
-    </p-dialog>
+    <p-dialog [(visible)]="infoUserDialog" header="Detalle de la reserva" [modal]="true" [style]="{width:'750px'}">
+      <div class="p-fluid">
+          <table class="p-datatable">
+              <tbody>
+                  <tr>
+                      <td><strong>Id Reserva:</strong></td>
+                      <td>{{ eventDetails?.idReserva }}</td>
+                  </tr>
+                  <tr>
+                      <td><strong>Nombre reserva:</strong></td>
+                      <td>{{ eventDetails?.title }}</td>
+                  </tr>
+                  <tr>
+                      <td><strong>Nombre dependencia:</strong></td>
+                      <td>{{ eventDetails?.dependencia }}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>N° de personas:</strong></td>
+                    <td>{{ eventDetails?.NPersonas }}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Comentarios:</strong></td>
+                    <td>{{ eventDetails?.comentarios }}</td>
+                  </tr>
+                  <tr>
+                      <td><strong>Insumos dependencia:</strong></td>
+                      <td>{{ eventDetails?.insumosDependencia }}</td>
+                  </tr>
+                  <tr>
+                      <td><strong>Horas seleccionadas:</strong></td>
+                      <td>{{ eventDetails?.HorasSeleccionadas.join('; ') }}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Fecha creación:</strong></td>
+                    <td>{{ eventDetails?.fechaCreacion | date: 'dd-MM-yyyy'}}</td>
+                  </tr>
+                  <tr>
+                      <td><strong>Solicitante:</strong></td>
+                      <td>{{ eventDetails?.nombreSolicitante }}</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+  </p-dialog>
 </div>
