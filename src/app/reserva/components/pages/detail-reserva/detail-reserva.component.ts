@@ -58,7 +58,7 @@ export class DetailReservaComponent implements OnInit{
         fechaSeleccionada.setHours(fechaSeleccionada.getHours() + 1);
         this.fechaReserva = this.formatDate(fechaSeleccionada); // Formatear la fecha
         
-        console.log("Horarios utilizados: ", this.fechaReserva);
+        //console.log("Horarios utilizados: ", this.fechaReserva);
       },
       error => {
         console.error('Error al obtener los horarios utilizados:', error);

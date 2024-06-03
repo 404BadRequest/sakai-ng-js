@@ -7,25 +7,40 @@ import { UserService } from 'src/app/reserva/service/user.service';
 
 @Component({
   templateUrl: './mis-reservas.component.html',
-  styleUrl: './mis-reservas.component.scss'
+  styleUrls: ['./mis-reservas.component.scss']
 })
-export class MisReservasComponent implements OnInit{
+export class MisReservasComponent implements OnInit {
   products!: Product[];
-  userId : string;
-  reservasByUser : any[] = [];
+  userId: string;
+  reservasByUser: any[] = [];
   cols: any[] = [];
   users: any[] = [];
+
   constructor(
     private productService: ProductService,
     private reservasService: ReservaService,
-    private userService : UserService
-    ){
-  }
+    private userService: UserService
+  ) { }
+
   ngOnInit() {
     const sessionUser = JSON.parse(localStorage.getItem('sessionUser'));
     this.getUserByAzureId(sessionUser.azureId);
   }
-  getUserByAzureId(azureId: string){
+
+  checkReservasVisibility() {
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    this.reservasByUser = this.reservasByUser.map(reserva => {
+      const reservaDate = new Date(reserva.FechaReserva);
+      //onsole.log("resaerva date: ", reservaDate, " - ", "tomorrow", tomorrow);
+      reserva.visible = reservaDate >= tomorrow;
+      return reserva;
+    });
+  }
+
+  getUserByAzureId(azureId: string) {
     this.userService.getUserByAzureId(azureId).subscribe(
       (usersAzure: any[]) => {
         this.users = usersAzure;
@@ -36,10 +51,12 @@ export class MisReservasComponent implements OnInit{
       }
     )
   }
-  getReservasByUserId(userId){
+
+  getReservasByUserId(userId: string) {
     this.reservasService.getReservaByUserId(userId).subscribe(
-      (reseras: any[]) => {
-        this.reservasByUser = reseras;
+      (reservas: any[]) => {
+        this.reservasByUser = reservas;
+        this.checkReservasVisibility();
         //console.log("Reservas por usuario: ", this.reservasByUser);
       },
       error => {
@@ -47,7 +64,18 @@ export class MisReservasComponent implements OnInit{
       }
     );
   }
+
   onGlobalFilter(table: Table, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
+
+  onDeleteReserva(Id: string){
+    this.reservasService.deleteReservaById(Id)
+    .subscribe(response => {
+        console.log({msg: response});
+        //this.getUsers();
+    }, error => {
+        console.error('Error en la eliminación de la reserva:', error);
+    });
+}
 }
