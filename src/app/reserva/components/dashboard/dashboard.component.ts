@@ -27,7 +27,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     loading$ = this.loadingService.loading$;
 
     mensajeAdvertencia: boolean = false;
-
+    mensajeNoRegistrado: boolean = false;
+    mensajeUsuarioNormal: boolean = false;
     constructor(
         private productService: ProductService, 
         public layoutService: LayoutService,
@@ -57,15 +58,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
             { label: 'Remove', icon: 'pi pi-fw pi-minus' }
         ];
     }
-
+    
     getUserByAzureId(azureId: string) {
         //console.log(azureId);
         this.userService.getUserByAzureId(azureId).subscribe(
             (usersAzure: any[]) => {
-                if(usersAzure!= null){
-                    this.mensajeAdvertencia = false;
-                }else{
+
+                if (usersAzure['RolId'] === 1 || usersAzure['RolId'] === 3) {
                     this.mensajeAdvertencia = true;
+                } else {
+                    this.mensajeAdvertencia = false;
+                }
+                if(usersAzure!= null){
+                    this.mensajeUsuarioNormal = true;
+                }else{
+                    this.mensajeNoRegistrado = true;
                 }
             },
             error => {
