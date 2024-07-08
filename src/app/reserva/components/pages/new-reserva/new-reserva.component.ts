@@ -362,16 +362,42 @@ export class NewResevaComponent implements OnInit {
   }
 
   procesarReservaEnvioMail(datosReservaEnvioMail, registrosUnicos){
-    
     const link = "https://reservaespacios-5de66.web.app/#/dashboard";
     //correo a dueños de insumos
     registrosUnicos.forEach(envioMails => {
       
-      const mensaje=  "Estimado "+envioMails.Nombres+"\n"+
-      "Junto con saludar, se informa la creación de la solicitud N°: "+ datosReservaEnvioMail.Id+ " con el nombre: '"+datosReservaEnvioMail.NombreReserva+"'\n"+
-      "Para obtener más detalle por favor presione el siguiente enlace: "+ link+"\n\n"+
-      "Atentamente \n"+
-      "Sistema de reserva de espacios";
+      const mensaje = `
+        <p>Estimado ${this.users['Nombres']},</p>
+        <p>Junto con saludar, se informa la creación de la solicitud N°: ${datosReservaEnvioMail.Id}</p>
+        <p>A continuación el detalle de la reserva realizada:</p>
+        <table border="1" style="border-collapse: collapse; width: 100%; margin-top: 20px;">
+          <thead>
+              <tr>
+                  <th style="padding: 8px; text-align: left;">Nombre reserva</th>
+                  <th style="padding: 8px; text-align: left;">N° de personas</th>
+                  <th style="padding: 8px; text-align: left;">Comentarios</th>
+                  <th style="padding: 8px; text-align: left;">Fecha reserva</th>
+                  <th style="padding: 8px; text-align: left;">Nombre dependencia</th>
+                  <th style="padding: 8px; text-align: left;">Insumos</th>
+                  <th style="padding: 8px; text-align: left;">Horas seleccionadas</th>
+                  <th style="padding: 8px; text-align: left;">Solicitante</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td style="padding: 8px;">${datosReservaEnvioMail.NombreReserva}</td>
+                  <td style="padding: 8px;">${datosReservaEnvioMail.NPersonas}</td>
+                  <td style="padding: 8px;">${datosReservaEnvioMail.Comentario}</td>
+                  <td style="padding: 8px;">${new Date(datosReservaEnvioMail.FechaReserva).toLocaleDateString()}</td>
+                  <td style="padding: 8px;">${datosReservaEnvioMail.NombreDependencia}</td>
+                  <td style="padding: 8px;">${datosReservaEnvioMail.InsumosConcatenadosName}</td>
+                  <td style="padding: 8px;">${datosReservaEnvioMail.HorariosContatenados}</td>
+                  <td style="padding: 8px;">${this.users['Nombres']} ${this.users['Apellidos'] || ''}</td>
+              </tr>
+          </tbody>
+        </table>
+        <p>Atentamente,<br>Sistema de reserva de espacios</p>
+        `;
       
       this.optionsMail = {
         asunto: 'Nueva participación en reserva - N°: '+ datosReservaEnvioMail.Id,
@@ -382,16 +408,43 @@ export class NewResevaComponent implements OnInit {
     });
 
     //se envia correo a creador de la reserva
-    const mensaje=  "Estimado "+this.users['Nombres']+"\n"+
-    "Junto con saludar, se informa la creación de la solicitud N°: "+ datosReservaEnvioMail.Id+ " con el nombre: '"+datosReservaEnvioMail.NombreReserva+"'\n"+
-    "Para obtener más detalle por favor presione el siguiente enlace: "+ link+"\n\n"+
-    "Atentamente \n"+
-    "Sistema de reserva de espacios";
+    const mensajeHTML = `
+    <p>Estimado ${this.users['Nombres']},</p>
+    <p>Junto con saludar, se informa la creación de la solicitud N°: ${datosReservaEnvioMail.Id}</p>
+    <p>A continuación el detalle de la reserva realizada:</p>
+    <table border="1" style="border-collapse: collapse; width: 100%; margin-top: 20px;">
+        <thead>
+              <tr>
+                  <th style="padding: 8px; text-align: left;">Nombre reserva</th>
+                  <th style="padding: 8px; text-align: left;">N° de personas</th>
+                  <th style="padding: 8px; text-align: left;">Comentarios</th>
+                  <th style="padding: 8px; text-align: left;">Fecha reserva</th>
+                  <th style="padding: 8px; text-align: left;">Nombre dependencia</th>
+                  <th style="padding: 8px; text-align: left;">Insumos</th>
+                  <th style="padding: 8px; text-align: left;">Horas seleccionadas</th>
+                  <th style="padding: 8px; text-align: left;">Solicitante</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td style="padding: 8px;">${datosReservaEnvioMail.NombreReserva}</td>
+                  <td style="padding: 8px;">${datosReservaEnvioMail.NPersonas}</td>
+                  <td style="padding: 8px;">${datosReservaEnvioMail.Comentario}</td>
+                  <td style="padding: 8px;">${new Date(datosReservaEnvioMail.FechaReserva).toLocaleDateString()}</td>
+                  <td style="padding: 8px;">${datosReservaEnvioMail.NombreDependencia}</td>
+                  <td style="padding: 8px;">${datosReservaEnvioMail.InsumosConcatenadosName}</td>
+                  <td style="padding: 8px;">${datosReservaEnvioMail.HorariosContatenados}</td>
+                  <td style="padding: 8px;">${this.users['Nombres']} ${this.users['Apellidos'] || ''}</td>
+              </tr>
+          </tbody>
+    </table>
+    <p>Atentamente,<br>Sistema de reserva de espacios</p>
+    `;
     
     this.optionsMail = {
       asunto: 'Nueva reserva - N°: '+ datosReservaEnvioMail.Id,
       mail: this.users['Email'],
-      mensaje: mensaje
+      mensaje: mensajeHTML
     }
     this.envioMail();
   }
