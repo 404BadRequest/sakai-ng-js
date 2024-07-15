@@ -39,7 +39,7 @@
               <td style="width: 15%; min-width: 8rem;">{{reserva.Nombres }} {{reserva.Apellidos }}</td>
               <td style="width: 25%;">
                 <button pButton pRipple type="button" icon="pi pi-search" class="p-button p-component p-button-text p-button-icon-only" [routerLink]="['/pages/detail-reserva/', reserva.Id]"></button>
-                <button *ngIf="reserva.visible" pButton pRipple type="button" icon="pi pi-pencil" class="p-button p-component p-button-text p-button-icon-only" [routerLink]="['/pages/detail-reserva/', reserva.Id]"></button>
+                <!--<button *ngIf="reserva.visible" pButton pRipple type="button" icon="pi pi-pencil" class="p-button p-component p-button-text p-button-icon-only" [routerLink]="['/pages/detail-reserva/', reserva.Id]"></button>-->
                 <button *ngIf="reserva.visible" pButton pRipple type="button" icon="pi pi-trash" class="p-button p-component p-button-text p-button-icon-only" (click)="deleteSelectedReserva(reserva.Id)"></button>
               </td>
             </tr>
