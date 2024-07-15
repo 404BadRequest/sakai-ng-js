@@ -54,6 +54,6 @@ export class ReservaService {
     }
     deleteReservaById(Id: string): Observable<any>{
         const url = `${this.urlApi}/reservas/delete/${Id}`;
-        return this.http.post<any>(url, Id);
+        return this.http.delete<any>(url);
     }
 }

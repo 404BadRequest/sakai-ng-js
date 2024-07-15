@@ -1,4 +1,12 @@
-<div class="grid">
+<div class="grid" *ngIf="isLoading">
+  <div class="col-12">
+      <div class="card">
+          <h4>Eliminando...</h4>
+          <p-progressBar mode="indeterminate" [style]="{'height': '8px'}"></p-progressBar>
+      </div>
+  </div>
+</div>
+<div class="grid" *ngIf="!isLoading">
     <div class="col-12">
       <div class="card">
         <h4>Mis solicitudes</h4>
@@ -32,12 +40,29 @@
               <td style="width: 25%;">
                 <button pButton pRipple type="button" icon="pi pi-search" class="p-button p-component p-button-text p-button-icon-only" [routerLink]="['/pages/detail-reserva/', reserva.Id]"></button>
                 <button *ngIf="reserva.visible" pButton pRipple type="button" icon="pi pi-pencil" class="p-button p-component p-button-text p-button-icon-only" [routerLink]="['/pages/detail-reserva/', reserva.Id]"></button>
-                <button *ngIf="reserva.visible" pButton pRipple type="button" icon="pi pi-trash" class="p-button p-component p-button-text p-button-icon-only" (click)="confirmDeleteSelected(reserva.Id)"></button>
+                <button *ngIf="reserva.visible" pButton pRipple type="button" icon="pi pi-trash" class="p-button p-component p-button-text p-button-icon-only" (click)="deleteSelectedReserva(reserva.Id)"></button>
               </td>
             </tr>
           </ng-template>
         </p-table>
       </div>
     </div>
+
+    <p-dialog [(visible)]="deleteUserDialog" header="Confirmación de eliminación" [modal]="true" [style]="{width:'450px'}">
+      <div class="flex align-items-center justify-content-center">
+          <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+          <span>Está seguro que desea eliminar la reserva <b>N°: {{reservaId}}</b> seleccionada ?</span>
+      </div>
+      <ng-template pTemplate="footer">
+          <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteUserDialog = false"></button>
+          <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si" (click)="confirmDelete()"></button>
+      </ng-template>
+    </p-dialog>
+    <p-dialog [(visible)]="deleteUserDialogConfirm" header="Eliminación" [modal]="true" [style]="{width:'450px'}">
+      <div class="flex align-items-center justify-content-center">
+          <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+          <span>Reserva elmininada correctamente</span>
+      </div>
+    </p-dialog>
   </div>
   
