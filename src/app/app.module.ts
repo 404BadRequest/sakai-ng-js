@@ -60,16 +60,16 @@ import { EnvioMailService } from './reserva/service/mail.service';
 
   export function MSALInstanceFactory(): IPublicClientApplication {
     return new PublicClientApplication({
-      /*auth: {
+      auth: {
         clientId: 'f9432d3e-1e87-461f-bba7-0fa1db5a4730',
         authority: 'https://login.microsoftonline.com/e5835003-ab1f-4e4b-8020-c5886fbc8369',
         redirectUri: 'https://reservaespacios-5de66.web.app',
-      },*/
-      auth: {
+      },
+      /*auth: {
         clientId: '20dea582-0e77-42d5-b802-975107d904ae',
         authority: 'https://login.microsoftonline.com/11bc7339-c6ee-4268-9071-46778e253099',
         redirectUri: 'http://localhost:4200',
-      },
+      },*/
       cache: {
         cacheLocation: BrowserCacheLocation.LocalStorage,
         storeAuthStateInCookie: isIE, // set to true for IE 11

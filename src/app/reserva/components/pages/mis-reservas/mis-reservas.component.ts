@@ -26,6 +26,8 @@ export class MisReservasComponent implements OnInit {
   successMessage: string = '';
   errorMessage: string = '';
   deleteUserDialogConfirm: boolean=false;
+  editUserDialog: boolean = false;
+  datosReservaEdit: any[] = [];
 
   optionsMail = {
     asunto: 'Correo electrónico fallido',
@@ -114,7 +116,7 @@ export class MisReservasComponent implements OnInit {
       (reserva: any) => {
         const datosReservaEnvioMail = reserva;
 
-        
+
 
         // Eliminar la reserva
         this.reservasService.deleteReservaById(this.reservaId).subscribe(
@@ -238,5 +240,20 @@ export class MisReservasComponent implements OnInit {
     error => {
       console.error('Error al enviar mai: ', error);
     });
+  }
+
+  editSelectedReserva(reservaId) {
+    this.reservaId = reservaId
+    this.editUserDialog = true;
+
+    this.reservasService.getReservaById(this.reservaId).subscribe(
+      (reserva: any) => {
+        this.datosReservaEdit = reserva;
+        console.log("datos: ", this.datosReservaEdit);
+      },
+      error => {
+        console.error('Error al obtener reserva por ID:', error);
+      }
+    );
   }
 }

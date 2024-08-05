@@ -39,7 +39,7 @@
               <td style="width: 15%; min-width: 8rem;">{{reserva.Nombres }} {{reserva.Apellidos }}</td>
               <td style="width: 25%;">
                 <button pButton pRipple type="button" icon="pi pi-search" class="p-button p-component p-button-text p-button-icon-only" [routerLink]="['/pages/detail-reserva/', reserva.Id]"></button>
-                <!--<button *ngIf="reserva.visible" pButton pRipple type="button" icon="pi pi-pencil" class="p-button p-component p-button-text p-button-icon-only" [routerLink]="['/pages/detail-reserva/', reserva.Id]"></button>-->
+                <!--<button *ngIf="reserva.visible" pButton pRipple type="button" icon="pi pi-pencil" class="p-button p-component p-button-text p-button-icon-only" (click)="editSelectedReserva(reserva.Id)"></button>-->
                 <button *ngIf="reserva.visible" pButton pRipple type="button" icon="pi pi-trash" class="p-button p-component p-button-text p-button-icon-only" (click)="deleteSelectedReserva(reserva.Id)"></button>
               </td>
             </tr>
@@ -58,11 +58,42 @@
           <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si" (click)="confirmDelete()"></button>
       </ng-template>
     </p-dialog>
+    
     <p-dialog [(visible)]="deleteUserDialogConfirm" header="Eliminación" [modal]="true" [style]="{width:'450px'}">
       <div class="flex align-items-center justify-content-center">
           <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
           <span>Reserva elmininada correctamente</span>
       </div>
+    </p-dialog>
+
+    <p-dialog [(visible)]="editUserDialog" header="Edición de reserva" [modal]="true" [style]="{width:'450px'}">
+        <ng-template pTemplate="body">
+          <div class="field">
+            <label for="name">Nombre de la reserva</label>
+            <span class="p-input-icon-left">
+              <i class="pi pi-id-card"></i>
+              <input type="text" pInputText id="NombreReserva" [(ngModel)]="datosReservaEdit.NombreReserva" required autofocus/>
+            </span>
+          </div>
+          <div class="field">
+            <label for="name">Número de personas</label> 
+            <span class="p-input-icon-left">
+              <i class="pi pi-id-card"></i>
+              <input type="text" pInputText id="NPersonas" [(ngModel)]="datosReservaEdit.NPersonas" required/>
+            </span>
+          </div>
+          <div class="field">
+            <label for="name">Comentarios</label> 
+            <span class="p-input-icon-left">
+              <i class="pi pi-id-card"></i>
+              <input type="text" pInputText id="Comentario" [(ngModel)]="datosReservaEdit.Comentario" required/>
+            </span>
+          </div>
+        </ng-template>
+      <ng-template pTemplate="footer">
+          <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Cancelar" (click)="editUserDialog = false"></button>
+          <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Guardar"></button>
+      </ng-template>
     </p-dialog>
   </div>
   

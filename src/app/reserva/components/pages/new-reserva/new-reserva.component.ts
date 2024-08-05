@@ -12,6 +12,7 @@ import { ReservaService } from 'src/app/reserva/service/reserva.service';
 import { ReservaHorariosService } from 'src/app/reserva/service/reservaHorarios.service';
 import { SelectedDataService } from 'src/app/reserva/service/selected-data.service';
 import { UserService } from 'src/app/reserva/service/user.service';
+import { PrimeNGConfig } from 'primeng/api';
 
 interface Hora {
   hora: number;
@@ -65,6 +66,7 @@ export class NewResevaComponent implements OnInit {
   users: any[] = [];
   insumosUser: any[] = [];
   reservaEnvioMail: any[];
+  es: any;
 
   optionsMail = {
       asunto: 'Correo electrónico fallido',
@@ -86,7 +88,8 @@ export class NewResevaComponent implements OnInit {
     private horariosService: HorariosService,
     private userService: UserService,
     private envioMailService: EnvioMailService,
-    private htpclien: HttpClient
+    private htpclien: HttpClient,
+    private primengConfig: PrimeNGConfig
   ) { }
 
   ngOnInit() {
@@ -108,6 +111,20 @@ export class NewResevaComponent implements OnInit {
     // Agregar un día a la fecha actual
     fechaActual.setDate(fechaActual.getDate() + 1);
     this.minDate = fechaActual;
+   
+    // calendario en español
+    this.es = {
+      firstDayOfWeek: 1,
+      dayNames: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+      dayNamesShort: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"],
+      dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
+      monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+      monthNamesShort: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"],
+      today: 'Hoy',
+      clear: 'Limpiar'
+    };
+
+    this.primengConfig.setTranslation(this.es);
 
     this.cols = [
       { field: 'hora', header: 'Hora' },
