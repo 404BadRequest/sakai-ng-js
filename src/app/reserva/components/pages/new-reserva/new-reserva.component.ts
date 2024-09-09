@@ -109,7 +109,7 @@ export class NewResevaComponent implements OnInit {
     // Obtener la fecha actual
     const fechaActual = new Date();
     // Agregar un día a la fecha actual
-    fechaActual.setDate(fechaActual.getDate() + 1);
+    fechaActual.setDate(fechaActual.getDate() + 3);
     this.minDate = fechaActual;
    
     // calendario en español
