@@ -146,31 +146,35 @@ export class CalendarComponent implements OnInit{
 
     // Crear eventos fusionados
     this.calendarEvents = Object.values(horariosAgrupados).map((grupo: any[]) => {
-        const horas = grupo.map(horario => timeToMinutes(horario.HoraSeleccionada));
-        const HoraSeleccionadaInicio = minutesToTime(Math.min(...horas));
-        const HoraSeleccionadaFin = minutesToTime(Math.max(...horas) + 30); // adding 30 minutes to the last hour to get the correct end time
-        
-        const HorasSeleccionadas = grupo.map(horario => horario.HoraSeleccionada);
-        
-        const horario = grupo[0];
-        const fechaSeleccionada = new Date(horario.FechaReserva);
-        const fechaFormateada = this.formatDate(fechaSeleccionada);
-
-        return {
-            idReserva: horario.IdReserva,
-            title: horario.NombreReserva + " - " + horario.NombreSolicitante,
-            dependencia: horario.NombreDependencia,
-            start: fechaFormateada + "T" + HoraSeleccionadaInicio,
-            end: "",
-            color: horario.ColorDependencia,
-            insumosDependencia: horario.InsumosConcatenadosName,
-            nombreSolicitante: horario.NombreSolicitante,
-            HorasSeleccionadas: HorasSeleccionadas,
-            NPersonas: horario.NPersonas,
-            comentarios: horario.Comentario,
-            fechaCreacion: horario.FechaCreacion
-        };
-    });
+      const horas = grupo.map(horario => {
+          const minutos = timeToMinutes(horario.HoraSeleccionada);
+          return isNaN(minutos) ? 0 : minutos; // Manejo de errores
+      });
+      
+      const HoraSeleccionadaInicio = minutesToTime(Math.min(...horas));
+      const HoraSeleccionadaFin = minutesToTime(Math.max(...horas) + 30);
+      
+      const HorasSeleccionadas = grupo.map(horario => horario.HoraSeleccionada);
+      
+      const horario = grupo[0];
+      const fechaSeleccionada = new Date(horario.FechaReserva);
+      const fechaFormateada = this.formatDate(fechaSeleccionada);
+  
+      return {
+          idReserva: horario.IdReserva,
+          title: `${horario.NombreReserva} - ${horario.NombreSolicitante}`,
+          dependencia: horario.NombreDependencia,
+          start: `${fechaFormateada}`,
+          end: "",
+          color: horario.ColorDependencia,
+          insumosDependencia: horario.InsumosConcatenadosName,
+          nombreSolicitante: horario.NombreSolicitante,
+          HorasSeleccionadas: HorasSeleccionadas,
+          NPersonas: horario.NPersonas,
+          comentarios: horario.Comentario,
+          fechaCreacion: horario.FechaCreacion
+      };
+  });
   }
 
 
