@@ -39,8 +39,8 @@
               <td style="width: 15%; min-width: 8rem;">{{reserva.Nombres }} {{reserva.Apellidos }}</td>
               <td style="width: 25%;">
                 <button pButton pRipple type="button" icon="pi pi-search" class="p-button p-component p-button-text p-button-icon-only" [routerLink]="['/pages/detail-reserva/', reserva.Id]"></button>
-                <!--<button *ngIf="reserva.visible" pButton pRipple type="button" icon="pi pi-pencil" class="p-button p-component p-button-text p-button-icon-only" (click)="editSelectedReserva(reserva.Id)"></button>-->
-                <button *ngIf="reserva.visible" pButton pRipple type="button" icon="pi pi-trash" class="p-button p-component p-button-text p-button-icon-only" (click)="deleteSelectedReserva(reserva.Id)"></button>
+                <button pButton pRipple type="button" icon="pi pi-pencil" class="p-button p-component p-button-text p-button-icon-only" (click)="editSelectedReserva(reserva.Id)"></button>
+                <button pButton pRipple type="button" icon="pi pi-trash" class="p-button p-component p-button-text p-button-icon-only" (click)="deleteSelectedReserva(reserva.Id)"></button>
               </td>
             </tr>
           </ng-template>
@@ -48,23 +48,43 @@
       </div>
     </div>
 
-    <p-dialog [(visible)]="deleteUserDialog" header="Confirmación de eliminación" [modal]="true" [style]="{width:'450px'}">
-      <div class="flex align-items-center justify-content-center">
-          <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-          <span>Está seguro que desea eliminar la reserva <b>N°: {{reservaId}}</b> seleccionada ?</span>
-      </div>
-      <ng-template pTemplate="footer">
-          <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteUserDialog = false"></button>
-          <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si" (click)="confirmDelete()"></button>
-      </ng-template>
-    </p-dialog>
-    
-    <p-dialog [(visible)]="deleteUserDialogConfirm" header="Eliminación" [modal]="true" [style]="{width:'450px'}">
-      <div class="flex align-items-center justify-content-center">
-          <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-          <span>Reserva elmininada correctamente</span>
-      </div>
-    </p-dialog>
+    <!-- Diálogo de confirmación para eliminar -->
+<p-dialog [(visible)]="deleteUserDialog" 
+header="Confirmación de eliminación" 
+[modal]="true" 
+[style]="{width:'450px'}">
+<div class="flex align-items-center justify-content-center">
+<i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+<span>¿Está seguro que desea eliminar la reserva <b>N°: {{reservaId}}</b>?</span>
+</div>
+<ng-template pTemplate="footer">
+<button pButton 
+      pRipple 
+      icon="pi pi-times" 
+      class="p-button-text" 
+      label="No" 
+      (click)="deleteUserDialog = false">
+</button>
+<button pButton 
+      pRipple 
+      icon="pi pi-check" 
+      class="p-button-danger" 
+      label="Sí" 
+      (click)="confirmDelete()">
+</button>
+</ng-template>
+</p-dialog>
+
+<!-- Diálogo de confirmación exitosa -->
+<p-dialog [(visible)]="deleteUserDialogConfirm" 
+header="Eliminación" 
+[modal]="true" 
+[style]="{width:'450px'}">
+<div class="flex align-items-center justify-content-center">
+<i class="pi pi-check-circle mr-3" style="font-size: 2rem; color: var(--green-500);"></i>
+<span>Reserva eliminada correctamente</span>
+</div>
+</p-dialog>
 
     <p-dialog [(visible)]="editUserDialog" header="Edición de reserva" [modal]="true" [style]="{width:'450px'}">
         <ng-template pTemplate="body">

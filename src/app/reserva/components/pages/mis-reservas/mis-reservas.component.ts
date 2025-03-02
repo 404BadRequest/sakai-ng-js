@@ -238,7 +238,7 @@ export class MisReservasComponent implements OnInit {
      console.log("Mensaje enviado"); 
     },
     error => {
-      console.error('Error al enviar mai: ', error);
+      console.error('Error al enviar mail: ', error);
     });
   }
 
