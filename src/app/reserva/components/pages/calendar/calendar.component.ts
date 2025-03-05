@@ -116,69 +116,66 @@ export class CalendarComponent implements OnInit{
   mapHorariosToEvents(dependenciaId?: string, insumoid?: string) {
     let horariosFiltrados = this.horariosUtilizados;
     if (dependenciaId) {
-        horariosFiltrados = horariosFiltrados.filter(horario => horario.DependenciaId === dependenciaId);
+      horariosFiltrados = horariosFiltrados.filter(horario => horario.DependenciaId === dependenciaId);
     }
     if (insumoid) {
-        horariosFiltrados = horariosFiltrados.filter(horario => horario.InsumosConcatenados.includes(insumoid));
+      horariosFiltrados = horariosFiltrados.filter(horario => horario.InsumosConcatenados.includes(insumoid));
     }
-
+  
     // Agrupar horarios por IdReserva
     const horariosAgrupados = horariosFiltrados.reduce((acc: { [key: number]: any[] }, horario) => {
-        if (!acc[horario.IdReserva]) {
-            acc[horario.IdReserva] = [];
-        }
-        acc[horario.IdReserva].push(horario);
-        return acc;
+      if (!acc[horario.IdReserva]) {
+        acc[horario.IdReserva] = [];
+      }
+      acc[horario.IdReserva].push(horario);
+      return acc;
     }, {});
-
-    // Convertir horas a minutos
-    const timeToMinutes = (time: string) => {
+  
+    // Crear eventos fusionados
+    this.calendarEvents = Object.values(horariosAgrupados).map((grupo: any[]) => {
+      // Obtener todas las horas seleccionadas
+      const horasSeleccionadas = grupo.flatMap(horario => horario.HoraSeleccionada.split(' - '));
+  
+      // Convertir horas a minutos para calcular la mínima y máxima
+      const timeToMinutes = (time: string) => {
         const [hours, minutes] = time.split(':').map(Number);
         return hours * 60 + minutes;
-    };
-
-    // Convertir minutos a horas
-    const minutesToTime = (minutes: number) => {
+      };
+  
+      const minutos = horasSeleccionadas.map(timeToMinutes);
+      const horaMinima = Math.min(...minutos);
+      const horaMaxima = Math.max(...minutos);
+  
+      // Convertir minutos a horas
+      const minutesToTime = (minutes: number) => {
         const hours = Math.floor(minutes / 60);
         const mins = minutes % 60;
         return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
-    };
-
-    // Crear eventos fusionados
-    this.calendarEvents = Object.values(horariosAgrupados).map((grupo: any[]) => {
-      const horas = grupo.map(horario => {
-          const minutos = timeToMinutes(horario.HoraSeleccionada);
-          return isNaN(minutos) ? 0 : minutos; // Manejo de errores
-      });
-      
-      const HoraSeleccionadaInicio = minutesToTime(Math.min(...horas));
-      const HoraSeleccionadaFin = minutesToTime(Math.max(...horas) + 30);
-      
-      const HorasSeleccionadas = grupo.map(horario => horario.HoraSeleccionada);
-      
+      };
+  
+      const HoraSeleccionadaInicio = minutesToTime(horaMinima); // Hora mínima de inicio
+      const HoraSeleccionadaFin = minutesToTime(horaMaxima + 30); // Hora máxima de fin (+30 minutos)
+  
       const horario = grupo[0];
       const fechaSeleccionada = new Date(horario.FechaReserva);
       const fechaFormateada = this.formatDate(fechaSeleccionada);
   
       return {
-          idReserva: horario.IdReserva,
-          title: `${horario.NombreReserva} - ${horario.NombreSolicitante}`,
-          dependencia: horario.NombreDependencia,
-          start: `${fechaFormateada}`,
-          end: "",
-          color: horario.ColorDependencia,
-          insumosDependencia: horario.InsumosConcatenadosName,
-          nombreSolicitante: horario.NombreSolicitante,
-          HorasSeleccionadas: HorasSeleccionadas,
-          NPersonas: horario.NPersonas,
-          comentarios: horario.Comentario,
-          fechaCreacion: horario.FechaCreacion
+        idReserva: horario.IdReserva,
+        title: `${horario.NombreReserva} - ${horario.NombreSolicitante}`,
+        dependencia: horario.NombreDependencia,
+        start: `${fechaFormateada}T${HoraSeleccionadaInicio}:00`, // Fecha y hora mínima de inicio
+        end: `${fechaFormateada}T${HoraSeleccionadaFin}:00`, // Fecha y hora máxima de fin
+        color: horario.ColorDependencia,
+        insumosDependencia: horario.InsumosConcatenadosName,
+        nombreSolicitante: horario.NombreSolicitante,
+        HorasSeleccionadas: grupo.map(horario => horario.HoraSeleccionada),
+        NPersonas: horario.NPersonas,
+        comentarios: horario.Comentario,
+        fechaCreacion: horario.FechaCreacion
       };
-  });
+    });
   }
-
-
-  
 
   calendarOptions = {
     plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
