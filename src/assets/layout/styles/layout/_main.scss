@@ -26,3 +26,78 @@ a {
 .layout-wrapper {
     min-height: 100vh;
 }
+@media print {
+    // Oculta el botón de imprimir en la impresión
+    .p-button {
+      display: none;
+    }
+  
+    // Ajusta el diseño del card para la impresión
+    .card {
+      padding: 0;
+      margin: 0;
+      border: none;
+      box-shadow: none; // Elimina sombras para impresión
+    }
+  
+    // Elimina el espacio superior no deseado
+    .flex.flex-column.align-items-start.md\:flex-row.md\:align-items-center.md\:justify-content-between {
+      margin-top: 0; // Elimina el margen superior
+      padding-top: 0; // Elimina el relleno superior
+    }
+  
+    // Asegúrate de que los p-fieldset se muestren correctamente
+    .p-fieldset {
+      border: 1px solid #000; // Añade un borde sólido para mejor visibilidad
+      margin-bottom: 10px;
+  
+      .p-fieldset-legend {
+        background-color: transparent; // Fondo transparente para la leyenda
+        color: #000; // Texto negro para la leyenda
+        font-weight: bold; // Texto en negrita
+      }
+    }
+  
+    // Ajusta los estilos de los elementos dentro del card
+    .p-inputgroup {
+      margin-bottom: 5px;
+  
+      label {
+        font-weight: bold; // Texto en negrita para las etiquetas
+      }
+  
+      b {
+        font-weight: bold; // Asegura que el texto en negrita se vea bien
+      }
+    }
+  
+    // Ajusta los estilos de las listas
+    ul {
+      list-style-type: disc; // Añade viñetas a las listas
+      padding-left: 20px; // Espaciado para las listas
+  
+      li {
+        margin-bottom: 5px; // Espaciado entre elementos de la lista
+      }
+    }
+  
+    // Oculta elementos innecesarios en la impresión
+    .pi-angle-left, .p-button-label {
+      display: none;
+    }
+  
+    // Asegúrate de que el contenido no se corte en la impresión
+    .grid, .col-12 {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  
+    // Ajusta el título "Detalle de la reserva"
+    .text-4xl {
+      font-size: 24px; // Tamaño de fuente más pequeño para impresión
+      margin-top: 0; // Elimina el margen superior
+      padding-top: 0; // Elimina el relleno superior
+    }
+  }

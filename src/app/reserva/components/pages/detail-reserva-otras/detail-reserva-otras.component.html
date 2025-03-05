@@ -9,7 +9,8 @@
                             Detalle de la reserva
                         </div>
                     </div>
-                    <div>
+                    <div class="flex align-items-center gap-2"> <!-- Contenedor flexible para los botones -->
+                        <p-button icon="pi pi-print" (onClick)="imprimirPagina()"></p-button>
                         <p-button label="" [routerLink]="['/pages/mis-aprobaciones']" icon="pi pi-angle-left"></p-button>
                     </div>
                 </div>

@@ -274,4 +274,7 @@ export class CalendarComponent implements OnInit{
   onClearDropdown(){
     this.getHorariosUtilizados();
   }
+  imprimirPagina() {
+    window.print();
+  }
 }
