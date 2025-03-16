@@ -105,12 +105,7 @@ export class NewResevaComponent implements OnInit {
     this.getInsumos();
     this.getDependencias();
     this.dropdownItemsInsumos = this.selectedDataService.getSelectedData();
-    
-    // Obtener la fecha actual
-    const fechaActual = new Date();
-    // Agregar un día a la fecha actual
-    fechaActual.setDate(fechaActual.getDate() + 3);
-    this.minDate = fechaActual;
+    this.setInicioFechaCalendar();
    
     // calendario en español
     this.es = {
@@ -133,6 +128,14 @@ export class NewResevaComponent implements OnInit {
 
     const sessionUser = JSON.parse(localStorage.getItem('sessionUser'));
     this.getUserByAzureId(sessionUser.azureId);
+  }
+
+  setInicioFechaCalendar(){
+    // Obtener la fecha actual
+    const fechaActual = new Date();
+    // Agregar un día a la fecha actual
+    fechaActual.setDate(fechaActual.getDate() + 3);
+    this.minDate = fechaActual;
   }
 
   getUserByAzureId(azureId: string){
@@ -216,25 +219,46 @@ export class NewResevaComponent implements OnInit {
   nextStep() {
     if (this.items[this.activeIndex]['label'] === 'Información') {
       if (!this.nombreReserva || !this.numeroPersonas || !this.comentarios) {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Por favor complete todos los campos para continuar', life: 3000 });
-          return; // Detener el proceso de pasar al siguiente paso
-      }
-    }else if(this.items[this.activeIndex]['label'] === 'Insumos / Dependencia'){
-      if(!this.selectedItems || this.selectedItems.length === 0 || !this.selectedItemsDependencias || this.selectedItemsDependencias.length === 0){
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Por favor complete todos los campos para continuar', life: 3000 });
         return; // Detener el proceso de pasar al siguiente paso
       }
-      //se restaura calendario y se limpian los seleccione que quedaron paso anterior.
+    } else if (this.items[this.activeIndex]['label'] === 'Insumos / Dependencia') {
+      if (!this.selectedItems || this.selectedItems.length === 0 || !this.selectedItemsDependencias || this.selectedItemsDependencias.length === 0) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Por favor complete todos los campos para continuar', life: 3000 });
+        return; // Detener el proceso de pasar al siguiente paso
+      }
+      // Restaurar calendario y limpiar selecciones del paso anterior
       this.dateCalendar = null;
       this.limpiarGrupoFechas();
       this.selectedDate = null;
       this.horasSeleccionadas = [];
-    }else if(this.items[this.activeIndex]['label'] === 'Horario'){
-      if(!this.selectedDate || this.horasSeleccionadas.length === 0){
+      // Validar si el código 3 existe y es el único en el arreglo
+      const insumoIdExists = this.selectedItems.some(insumo => insumo.code === 3);
+      const otrosInsumos = this.selectedItems.filter(insumo => insumo.code !== 3);
+
+      if (insumoIdExists && otrosInsumos.length === 0) {
+        // Solo el código 3 está presente
+        const fechaActual = new Date();
+        fechaActual.setDate(fechaActual.getDate());
+        this.minDate = fechaActual;
+      } 
+      else {
+        // Solo el código 3 está presente
+        const fechaActual = new Date();
+        fechaActual.setDate(fechaActual.getDate()+3);
+        this.minDate = fechaActual;
+      }
+
+    } else if (this.items[this.activeIndex]['label'] === 'Horario') {
+      if (!this.selectedDate || this.horasSeleccionadas.length === 0) {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Por favor complete todos los campos para continuar', life: 3000 });
         return; // Detener el proceso de pasar al siguiente paso
       }
+  
     }
+      
+  
+    // Avanzar al siguiente paso
     const currentIndex = this.items.findIndex(item => item['active']);
     if (currentIndex < this.items.length - 1) {
       this.items[currentIndex]['active'] = false;
