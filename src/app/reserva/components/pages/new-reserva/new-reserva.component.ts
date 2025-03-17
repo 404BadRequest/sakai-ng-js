@@ -235,7 +235,8 @@ export class NewResevaComponent implements OnInit {
       // Validar si el código 3 existe y es el único en el arreglo
       const insumoIdExists = this.selectedItems.some(insumo => insumo.code === 3);
       const otrosInsumos = this.selectedItems.filter(insumo => insumo.code !== 3);
-
+      
+      //La opción de mis insumos hace que la fecha no se extienda en 3 días, si no que se extienda en 1 día
       if (insumoIdExists && otrosInsumos.length === 0) {
         // Solo el código 3 está presente
         const fechaActual = new Date();
@@ -247,6 +248,17 @@ export class NewResevaComponent implements OnInit {
         const fechaActual = new Date();
         fechaActual.setDate(fechaActual.getDate()+3);
         this.minDate = fechaActual;
+      }
+      //Los usuarios administradores pueden generar una reserva sin limite de tiempo
+      if (this.users['RolId'] === 1) {  
+        const fechaActual = new Date();
+        fechaActual.setDate(fechaActual.getDate());
+        this.minDate = fechaActual;
+      }else{
+         // Solo el código 3 está presente
+         const fechaActual = new Date();
+         fechaActual.setDate(fechaActual.getDate()+3);
+         this.minDate = fechaActual;
       }
 
     } else if (this.items[this.activeIndex]['label'] === 'Horario') {
