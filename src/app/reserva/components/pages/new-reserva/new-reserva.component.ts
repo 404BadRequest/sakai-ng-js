@@ -238,11 +238,11 @@ export class NewResevaComponent implements OnInit {
       
       
       //Los usuarios administradores pueden generar una reserva sin limite de tiempo
-      /*if (this.users['RolId'] === 1) {  
+      if (this.users['RolId'] === 1) {  
         const fechaActual = new Date();
         fechaActual.setDate(fechaActual.getDate());
         this.minDate = fechaActual;
-      }else{*/
+      }else{
          //La opción de mis insumos hace que la fecha no se extienda en 3 días, si no que se extienda en 1 día
         if (insumoIdExists && otrosInsumos.length === 0) {
           // Solo el código 3 está presente
@@ -256,7 +256,7 @@ export class NewResevaComponent implements OnInit {
           fechaActual.setDate(fechaActual.getDate()+3);
           this.minDate = fechaActual;
         }
-      //}
+      }
 
     } else if (this.items[this.activeIndex]['label'] === 'Horario') {
       if (!this.selectedDate || this.horasSeleccionadas.length === 0) {
